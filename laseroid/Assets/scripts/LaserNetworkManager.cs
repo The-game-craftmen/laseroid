@@ -50,6 +50,19 @@ public class LaserNetworkManager : NetworkManager
     {
 
     }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+        
+    }
+
+    public override void OnClientConnect(NetworkConnection conn)
+    {
+        base.OnClientConnect(conn);
+        ClientScene.AddPlayer(0);
+        
+    }
 }
 
     
