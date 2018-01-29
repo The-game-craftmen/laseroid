@@ -16,7 +16,10 @@ public class DarkFighterPlayer : NetworkBehaviour
     {
         
          rb = GetComponent<Rigidbody>();
-        
+        Camera camToPlayer = Camera.main;
+        camToPlayer.transform.parent = this.transform;
+        camToPlayer.transform.position = new Vector3(0, 0, -1);
+
     }
 
     void UpdateSpeed(float speedDelta)
@@ -52,19 +55,19 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
         else if (Input.GetKey(KeyCode.D) == true)
         {
-            rb.AddTorque(transform.up * -torqueStep * Time.deltaTime, ForceMode.Acceleration);
+            rb.AddTorque(transform.up * torqueStep * Time.deltaTime, ForceMode.Acceleration);
         }
         else if (Input.GetKey(KeyCode.Q) == true)
         {
-            rb.AddTorque(transform.up * torqueStep * Time.deltaTime, ForceMode.Acceleration);
+            rb.AddTorque(-transform.up * torqueStep * Time.deltaTime, ForceMode.Acceleration);
         }
         else if (Input.GetKey(KeyCode.A) == true)
         {
-            UpdateSpeed(Time.deltaTime * stepAcceleration);
+            UpdateSpeed(Time.deltaTime * -stepAcceleration);
         }
         else if (Input.GetKey(KeyCode.W) == true)
         {
-            UpdateSpeed(Time.deltaTime * -stepAcceleration);
+            UpdateSpeed(Time.deltaTime * stepAcceleration);
         }
         else if (Input.GetKey(KeyCode.Escape) == true)
         {
