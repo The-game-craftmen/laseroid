@@ -7,61 +7,72 @@ public class DarkFighterPlayer : NetworkBehaviour
 {
     private float torqueStep = 80;
     private float speed = 0;
-    private float speedMax = 30;
+    private const float speedMax = 30;
 
-    private float stepAcceleration = 25;
+    private const float stepAcceleration = 25;
     private Rigidbody rb;
     // Use this for initialization
     void Start()
     {
-        if (isServer)
+        
+         rb = GetComponent<Rigidbody>();
+        
+    }
+
+    void UpdateSpeed(float speedDelta)
+    {
+        if ((speed + speedDelta) > speedMax)
         {
-            rb = GetComponent<Rigidbody>();
+            speed = speedMax;
+        }
+        else
+        {
+            if ((speed + speedDelta) < 0)
+            {
+                speed = 0;
+            }
+            else
+            {
+                speed += speedDelta;
+            }
         }
     }
 
-    [Command]
-    void CmdApplyTorqueUp(float torque)
-    {
-        Debug.Log("TorqueZZZ");
-        rb.AddTorque(transform.right * torque, ForceMode.Acceleration);
-    }
-
-    [Command]
-    void CmdApplyTorqueLeft(float torque)
-    {
-        rb.AddTorque(transform.up * torque, ForceMode.Acceleration);
-    }
 
     // Update is called once per frame
     void Update () {
+        
         if (Input.GetKey(KeyCode.Z) == true)
-        {
-            Debug.Log("TorqueWZ" + isServer);
+        {       
+            rb.AddTorque(transform.right * torqueStep * Time.deltaTime, ForceMode.Acceleration);
         }
-        if (!isServer)
+        else if (Input.GetKey(KeyCode.S) == true)
         {
-            if (Input.GetKey(KeyCode.Z) == true)
-            {
-                Debug.Log("TorqueZ");
-                CmdApplyTorqueUp(torqueStep * Time.deltaTime);
-            }
-            else if (Input.GetKey(KeyCode.S) == true)
-            {
-                CmdApplyTorqueUp(-torqueStep * Time.deltaTime);
-            }
-            else if (Input.GetKey(KeyCode.D) == true)
-            {
-                CmdApplyTorqueLeft(-torqueStep * Time.deltaTime);
-            }
-            else if (Input.GetKey(KeyCode.Q) == true)
-            {
-                CmdApplyTorqueLeft(torqueStep * Time.deltaTime);
-            }
-            else if (Input.GetKey(KeyCode.Escape) == true)
-            {
-                Application.Quit();
-            }
+            rb.AddTorque(-transform.right * torqueStep * Time.deltaTime, ForceMode.Acceleration);
+        }
+        else if (Input.GetKey(KeyCode.D) == true)
+        {
+            rb.AddTorque(transform.up * -torqueStep * Time.deltaTime, ForceMode.Acceleration);
+        }
+        else if (Input.GetKey(KeyCode.Q) == true)
+        {
+            rb.AddTorque(transform.up * torqueStep * Time.deltaTime, ForceMode.Acceleration);
+        }
+        else if (Input.GetKey(KeyCode.A) == true)
+        {
+            UpdateSpeed(Time.deltaTime * stepAcceleration);
+        }
+        else if (Input.GetKey(KeyCode.W) == true)
+        {
+            UpdateSpeed(Time.deltaTime * -stepAcceleration);
+        }
+        else if (Input.GetKey(KeyCode.Escape) == true)
+        {
+            Application.Quit();
+        }
+        else
+        {
+            rb.AddForce(rb.transform.forward * -speed, ForceMode.Acceleration);
         }
     }
 }
