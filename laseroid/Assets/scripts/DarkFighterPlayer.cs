@@ -15,11 +15,13 @@ public class DarkFighterPlayer : NetworkBehaviour
     void Start()
     {
         
-         rb = GetComponent<Rigidbody>();
-        Camera camToPlayer = Camera.main;
-        camToPlayer.transform.parent = this.transform;
-        camToPlayer.transform.position = new Vector3(0, 0, -1);
+        rb = GetComponent<Rigidbody>();
+        if (isLocalPlayer) { 
+                Camera camToPlayer = Camera.main;
+                camToPlayer.transform.parent = this.transform;
+                camToPlayer.transform.position = new Vector3(0, 0, -1);
 
+        }
     }
 
     void UpdateSpeed(float speedDelta)
@@ -44,7 +46,11 @@ public class DarkFighterPlayer : NetworkBehaviour
 
     // Update is called once per frame
     void Update () {
-        
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
         if (Input.GetKey(KeyCode.Z) == true)
         {       
             rb.AddTorque(transform.right * torqueStep * Time.deltaTime, ForceMode.Acceleration);
@@ -63,11 +69,11 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
         else if (Input.GetKey(KeyCode.A) == true)
         {
-            UpdateSpeed(Time.deltaTime * -stepAcceleration);
+            UpdateSpeed(Time.deltaTime * stepAcceleration);
         }
         else if (Input.GetKey(KeyCode.W) == true)
         {
-            UpdateSpeed(Time.deltaTime * stepAcceleration);
+            UpdateSpeed(Time.deltaTime * -stepAcceleration);
         }
         else if (Input.GetKey(KeyCode.Escape) == true)
         {
