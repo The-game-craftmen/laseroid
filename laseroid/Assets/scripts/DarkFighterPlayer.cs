@@ -26,20 +26,9 @@ public class DarkFighterPlayer : NetworkBehaviour
 
     void UpdateSpeed(float speedDelta)
     {
-        if ((speed + speedDelta) > speedMax)
+        if (Mathf.Abs (speed + speedDelta) < speedMax)
         {
-            speed = speedMax;
-        }
-        else
-        {
-            if ((speed + speedDelta) < 0)
-            {
-                speed = 0;
-            }
-            else
-            {
-                speed += speedDelta;
-            }
+            speed += speedDelta;
         }
     }
 
@@ -69,11 +58,11 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
         else if (Input.GetKey(KeyCode.A) == true)
         {
-            UpdateSpeed(Time.deltaTime * stepAcceleration);
+            UpdateSpeed(Time.deltaTime * -stepAcceleration);
         }
         else if (Input.GetKey(KeyCode.W) == true)
         {
-            UpdateSpeed(Time.deltaTime * -stepAcceleration);
+            UpdateSpeed(Time.deltaTime * stepAcceleration);
         }
         else if (Input.GetKey(KeyCode.Escape) == true)
         {
