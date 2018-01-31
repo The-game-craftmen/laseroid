@@ -8,10 +8,14 @@ public class DarkFighterPlayer : NetworkBehaviour
     private float torqueStep = 80;
     private float speed = 0;
     private const float speedMax = 30;
+    private int hitpoint = 100;
+    public GameObject bulletPrefab;
 
     private const float stepAcceleration = 25;
     private Rigidbody rb;
     // Use this for initialization
+
+
     void Start()
     {
         
@@ -23,6 +27,28 @@ public class DarkFighterPlayer : NetworkBehaviour
 
         }
     }
+
+    public void SetDamage(int _hitpoint)
+    {
+        hitpoint -= _hitpoint;
+        if (hitpoint < 0) hitpoint = 0;
+    }
+
+    [Command]
+    private void CmdFire(Vector3 playerPosition, Vector3 playerForward, Quaternion playerRotation)
+    {
+        Vector3 location = playerPosition + playerForward * 2;
+        var bullet = (GameObject)Instantiate(bulletPrefab);
+        NetworkServer.Spawn(bullet);
+        Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
+        
+        rbBullet.transform.position = location;
+        rbBullet.transform.rotation = playerRotation;
+        rbBullet.AddForce(rbBullet.transform.forward * 1500, ForceMode.Acceleration);
+
+        Destroy(bullet, 2.0f);
+    }
+
 
     void UpdateSpeed(float speedDelta)
     {
@@ -67,6 +93,10 @@ public class DarkFighterPlayer : NetworkBehaviour
         else if (Input.GetKey(KeyCode.Escape) == true)
         {
             Application.Quit();
+        }
+        else if (Input.GetKeyDown(KeyCode.Space))
+        {
+            CmdFire(rb.transform.position, rb.transform.forward, rb.transform.rotation);
         }
         else
         {
