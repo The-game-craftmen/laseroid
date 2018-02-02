@@ -23,11 +23,11 @@ public class BulletScript : NetworkBehaviour
             timer += Time.deltaTime;
         }
     }
-    /*
+    
     void OnCollisionEnter(Collision collision)
     {
         if (isServer) {
-            
+    /*        
             if(collision.gameObject.tag == "ship")
             {
                 
@@ -42,12 +42,14 @@ public class BulletScript : NetworkBehaviour
                     Debug.Log("not damage");
                 }
             }
+            */
             Debug.Log(collision.gameObject);
-            //GameObject explosion = Resources.Load("ExplosionShim") as GameObject;
-            //GameObject expl = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
-            //NetworkServer.Spawn(expl);
+           
+            GameObject explosion = Resources.Load("LightExplosion") as GameObject;
+            GameObject expl = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
+            NetworkServer.Spawn(expl);
             Destroy(this.gameObject);
             
         }
-    }*/
+    }
 }

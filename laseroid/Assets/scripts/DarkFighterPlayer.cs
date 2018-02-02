@@ -46,7 +46,7 @@ public class DarkFighterPlayer : NetworkBehaviour
         rbBullet.transform.rotation = playerRotation;
         rbBullet.AddForce(rbBullet.transform.forward * 1500, ForceMode.Acceleration);
 
-        Destroy(bullet, 2.0f);
+        Destroy(bullet, 20.0f);
     }
 
 
