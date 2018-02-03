@@ -27,7 +27,7 @@ public class BulletScript : NetworkBehaviour
     void OnCollisionEnter(Collision collision)
     {
         if (isServer) {
-    /*        
+            
             if(collision.gameObject.tag == "ship")
             {
                 
@@ -42,7 +42,11 @@ public class BulletScript : NetworkBehaviour
                     Debug.Log("not damage");
                 }
             }
-            */
+            else
+            {
+                Debug.Log("pwer");
+            }
+            
             Debug.Log(collision.gameObject);
            
             GameObject explosion = Resources.Load("LightExplosion") as GameObject;

@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4267471944325874}
   - component: {fileID: 198685558704813200}
   - component: {fileID: 199963872244274104}
+  - component: {fileID: 114970473723243628}
   m_Layer: 0
   m_Name: LoudExplosion
   m_TagString: Untagged
@@ -41,6 +42,38 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114970473723243628
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1284760454180952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 148
+    i1: 81
+    i2: 189
+    i3: 83
+    i4: 133
+    i5: 1
+    i6: 195
+    i7: 84
+    i8: 137
+    i9: 117
+    i10: 210
+    i11: 73
+    i12: 46
+    i13: 135
+    i14: 177
+    i15: 94
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 0
 --- !u!198 &198685558704813200
 ParticleSystem:
   m_ObjectHideFlags: 1

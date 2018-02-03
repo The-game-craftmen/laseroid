@@ -4,12 +4,12 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class StartGame : MonoBehaviour {
-    public Button hostBtn;
-    public Button joinBtn;
     public bool isAtStartup = true;
+    public InputField IP;
+    public InputField nickname;
 
     NetworkClient myClient;
-    // Use this for initialization
+    // Use thTexts for initialization
     void Start () {
 		
 	}
@@ -21,22 +21,40 @@ public class StartGame : MonoBehaviour {
 
     public void Join()
     {
-        Debug.Log("here");
-        SceneManager.LoadScene("scenes/level1");
-    }
-
-    public void Host()
-    {
-        Debug.Log("Host Test");
+    
         GameObject dataOverScene = GameObject.Find("/DataOverScene");
         if (dataOverScene != null)
         {
-            Debug.Log("data over Scene found");
             DataOverScene dataOverSceneScript = dataOverScene.GetComponent<DataOverScene>();
             if (dataOverSceneScript != null)
             {
-                Debug.Log("data over Scene Script found");
+                dataOverSceneScript.SetIp(IP.text);
+                dataOverSceneScript.SetNickname(nickname.text);
+                SceneManager.LoadScene("scenes/level1");
+
+            }
+            else
+            {
+                Debug.Log("data over Scene Script not found");
+            }
+        }
+        else
+        {
+            Debug.Log("data over Scene not found");
+        }
+        SceneManager.LoadScene("scenes/level1");
+    }
+
+    public void Host() { 
+   
+        GameObject dataOverScene = GameObject.Find("/DataOverScene");
+        if (dataOverScene != null)
+        {
+            DataOverScene dataOverSceneScript = dataOverScene.GetComponent<DataOverScene>();
+            if (dataOverSceneScript != null)
+            {
                 dataOverSceneScript.SetIsHost(true);
+                dataOverSceneScript.SetNickname(nickname.text);
                 SceneManager.LoadScene("scenes/level1");
 
             }

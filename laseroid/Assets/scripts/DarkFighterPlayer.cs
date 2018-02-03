@@ -8,6 +8,7 @@ public class DarkFighterPlayer : NetworkBehaviour
     private float torqueStep = 80;
     private float speed = 0;
     private const float speedMax = 30;
+    [SyncVar]
     private int hitpoint = 100;
     public GameObject bulletPrefab;
 
@@ -47,6 +48,31 @@ public class DarkFighterPlayer : NetworkBehaviour
         rbBullet.AddForce(rbBullet.transform.forward * 1500, ForceMode.Acceleration);
 
         Destroy(bullet, 20.0f);
+    }
+
+    [ClientRpc]
+    void RpcRespawn()
+    {
+        if (isLocalPlayer)
+        {
+            transform.position = Vector3.zero;
+        }
+    }
+
+    public void DoDamage(int _damage)
+    {
+        if (isServer)
+        {
+            this.hitpoint -= _damage;
+            if (hitpoint <= 0)
+            {
+                GameObject explosion = Resources.Load("LoudExplosion") as GameObject;
+                GameObject expl = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
+                NetworkServer.Spawn(expl);
+                RpcRespawn();
+            }
+        }
+        
     }
 
 

@@ -9,20 +9,20 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1000471079700938}
+  m_RootGameObject: {fileID: 1944462372926498}
   m_IsPrefabParent: 1
---- !u!1 &1000471079700938
+--- !u!1 &1944462372926498
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4075621592361492}
-  - component: {fileID: 198777329105612672}
-  - component: {fileID: 199695703461544018}
-  - component: {fileID: 114971253753182552}
-  - component: {fileID: 114234104367767382}
+  - component: {fileID: 4209182312740044}
+  - component: {fileID: 198227553016494454}
+  - component: {fileID: 199601404150440780}
+  - component: {fileID: 114700982955509780}
+  - component: {fileID: 114175233623236336}
   m_Layer: 0
   m_Name: LightExplosion
   m_TagString: Untagged
@@ -30,12 +30,12 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4075621592361492
+--- !u!4 &4209182312740044
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000471079700938}
+  m_GameObject: {fileID: 1944462372926498}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 4.590111, y: 2.8432112, z: 0.006486096}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -43,55 +43,55 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114234104367767382
+--- !u!114 &114175233623236336
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000471079700938}
+  m_GameObject: {fileID: 1944462372926498}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6fb959b452337a64f9379dd6101c6314, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114971253753182552
+--- !u!114 &114700982955509780
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000471079700938}
+  m_GameObject: {fileID: 1944462372926498}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 372142912, guid: 870353891bb340e2b2a9c8707e7419ba, type: 3}
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_SceneId:
     m_Value: 0
   m_AssetId:
-    i0: 135
-    i1: 203
-    i2: 241
-    i3: 193
-    i4: 131
-    i5: 125
-    i6: 120
-    i7: 228
-    i8: 218
-    i9: 120
-    i10: 177
-    i11: 72
-    i12: 231
-    i13: 102
-    i14: 8
-    i15: 110
+    i0: 210
+    i1: 5
+    i2: 34
+    i3: 183
+    i4: 67
+    i5: 92
+    i6: 50
+    i7: 20
+    i8: 72
+    i9: 136
+    i10: 183
+    i11: 49
+    i12: 129
+    i13: 201
+    i14: 184
+    i15: 1
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
---- !u!198 &198777329105612672
+--- !u!198 &198227553016494454
 ParticleSystem:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000471079700938}
+  m_GameObject: {fileID: 1944462372926498}
   serializedVersion: 5
   lengthInSec: 2
   simulationSpeed: 1
@@ -146,7 +146,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 1
-  randomSeed: -370906728
+  randomSeed: 793147521
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -3492,13 +3492,13 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!199 &199695703461544018
+--- !u!199 &199601404150440780
 ParticleSystemRenderer:
   serializedVersion: 4
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000471079700938}
+  m_GameObject: {fileID: 1944462372926498}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0

@@ -28,7 +28,7 @@ GameObject:
   - component: {fileID: 65744636739670602}
   m_Layer: 0
   m_Name: pf_dark_fighter_63
-  m_TagString: Untagged
+  m_TagString: ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

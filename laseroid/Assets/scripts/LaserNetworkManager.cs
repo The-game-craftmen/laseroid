@@ -27,6 +27,7 @@ public class LaserNetworkManager : NetworkManager
                 }
                 else
                 {
+                    this.networkAddress = dataOverSceneScript.GetIp();
                     netClient = this.StartClient();
                 }
 
