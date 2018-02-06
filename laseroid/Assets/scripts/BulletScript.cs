@@ -27,7 +27,7 @@ public class BulletScript : NetworkBehaviour
     void OnCollisionEnter(Collision collision)
     {
         if (isServer) {
-            
+            Debug.Log("Collision" + collision.gameObject.tag);
             if(collision.gameObject.tag == "ship")
             {
                 

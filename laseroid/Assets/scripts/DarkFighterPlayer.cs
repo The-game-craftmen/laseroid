@@ -7,12 +7,12 @@ public class DarkFighterPlayer : NetworkBehaviour
 {
     private float torqueStep = 80;
     private float speed = 0;
-    private const float speedMax = 30;
+    private const float speedMax = 10;
     [SyncVar]
     private int hitpoint = 100;
     public GameObject bulletPrefab;
 
-    private const float stepAcceleration = 25;
+    private const float stepAcceleration = 0.5f;
     private Rigidbody rb;
     // Use this for initialization
 
@@ -27,6 +27,15 @@ public class DarkFighterPlayer : NetworkBehaviour
                 camToPlayer.transform.position = new Vector3(0, 0, -1);
 
         }
+        Material mat = this.GetComponent<MeshRenderer>().material;
+
+        mat.EnableKeyword("_EMISSION");
+        mat.SetColor("_EmissionColor", Color.green);
+        mat.SetFloat("_EmissionMap", 10);
+        //mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.
+        //this.GetComponent<MeshRenderer>().material.color = Color.white * 10;
+        ///this.GetComponent<MeshRenderer>().material.SetInt(_EmissionScaleUI)
+
     }
 
     public void SetDamage(int _hitpoint)
@@ -78,7 +87,7 @@ public class DarkFighterPlayer : NetworkBehaviour
 
     void UpdateSpeed(float speedDelta)
     {
-        if (Mathf.Abs (speed + speedDelta) < speedMax)
+        if (Mathf.Abs (speed + speedDelta) < speedMax && (speed + speedDelta)>=0)
         {
             speed += speedDelta;
         }
@@ -91,7 +100,7 @@ public class DarkFighterPlayer : NetworkBehaviour
         {
             return;
         }
-
+        
         if (Input.GetKey(KeyCode.Z) == true)
         {       
             rb.AddTorque(transform.right * torqueStep * Time.deltaTime, ForceMode.Acceleration);
@@ -110,11 +119,11 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
         else if (Input.GetKey(KeyCode.A) == true)
         {
-            UpdateSpeed(Time.deltaTime * -stepAcceleration);
+            UpdateSpeed(stepAcceleration);
         }
         else if (Input.GetKey(KeyCode.W) == true)
         {
-            UpdateSpeed(Time.deltaTime * stepAcceleration);
+            UpdateSpeed(-stepAcceleration);
         }
         else if (Input.GetKey(KeyCode.Escape) == true)
         {
@@ -124,9 +133,12 @@ public class DarkFighterPlayer : NetworkBehaviour
         {
             CmdFire(rb.transform.position, rb.transform.forward, rb.transform.rotation);
         }
-        else
-        {
-            rb.AddForce(rb.transform.forward * -speed, ForceMode.Acceleration);
-        }
+        
+        rb.AddForce(rb.transform.forward * speed, ForceMode.Acceleration);
+        Vector3 reduceVector = new Vector3(0.8f, 0.8f, 0.8f);
+        rb.velocity.Scale(reduceVector);
+
+        Debug.Log(speed);
+        
     }
 }
