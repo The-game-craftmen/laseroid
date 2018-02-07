@@ -5,17 +5,15 @@ using UnityEngine;
 
 public class DarkFighterPlayer : NetworkBehaviour
 {
-    private float torqueStep = 80;
+    private float torqueStep = 100;
     private float speed = 0;
     private const float speedMax = 10;
     [SyncVar]
     private int hitpoint = 100;
     public GameObject bulletPrefab;
-
+    private Vector3 reduceVector = new Vector3(0.8f, 0.8f, 0.8f);
     private const float stepAcceleration = 0.5f;
     private Rigidbody rb;
-    // Use this for initialization
-
 
     void Start()
     {
@@ -29,9 +27,9 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
         Material mat = this.GetComponent<MeshRenderer>().material;
 
-        mat.EnableKeyword("_EMISSION");
-        mat.SetColor("_EmissionColor", Color.green);
-        mat.SetFloat("_EmissionMap", 10);
+        //mat.EnableKeyword("_EMISSION");
+        //mat.SetColor("_EmissionColor", Color.green);
+        //mat.SetFloat("_EmissionMap", 10);
         //mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.
         //this.GetComponent<MeshRenderer>().material.color = Color.white * 10;
         ///this.GetComponent<MeshRenderer>().material.SetInt(_EmissionScaleUI)
@@ -93,16 +91,10 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
     }
 
-
-    // Update is called once per frame
-    void Update () {
-        if (!isLocalPlayer)
-        {
-            return;
-        }
-        
+    void ManageKeyboard()
+    {
         if (Input.GetKey(KeyCode.Z) == true)
-        {       
+        {
             rb.AddTorque(transform.right * torqueStep * Time.deltaTime, ForceMode.Acceleration);
         }
         else if (Input.GetKey(KeyCode.S) == true)
@@ -133,12 +125,20 @@ public class DarkFighterPlayer : NetworkBehaviour
         {
             CmdFire(rb.transform.position, rb.transform.forward, rb.transform.rotation);
         }
+    }
+
+
+    // Update is called once per frame
+    void Update () {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+
+        ManageKeyboard();
         
         rb.AddForce(rb.transform.forward * speed, ForceMode.Acceleration);
-        Vector3 reduceVector = new Vector3(0.8f, 0.8f, 0.8f);
         rb.velocity.Scale(reduceVector);
-
-        Debug.Log(speed);
         
     }
 }

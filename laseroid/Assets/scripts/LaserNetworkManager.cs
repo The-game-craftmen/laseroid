@@ -27,6 +27,7 @@ public class LaserNetworkManager : NetworkManager
                 }
                 else
                 {
+                    Debug.Log(dataOverSceneScript.GetIp());
                     this.networkAddress = dataOverSceneScript.GetIp();
                     netClient = this.StartClient();
                 }
@@ -44,7 +45,18 @@ public class LaserNetworkManager : NetworkManager
 
     }
 
+    public override void OnClientError(NetworkConnection conn, int errorCode)
+    {
+        base.OnClientError(conn, errorCode);
+        Debug.Log("Error Connection");
+    }
 
+    public override void OnStartClient(NetworkClient client)
+    {
+        base.OnStartClient(client);
+        Debug.Log(client.connection);
+        Debug.Log(client.isConnected);
+    }
 
     // Update is called once per frame
     void Update()
