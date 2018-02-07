@@ -14,19 +14,21 @@ public class DarkFighterPlayer : NetworkBehaviour
     private Vector3 reduceVector = new Vector3(0.8f, 0.8f, 0.8f);
     private const float stepAcceleration = 0.5f;
     private Rigidbody rb;
+    private GameObject speedBar;
 
     void Start()
     {
         
         rb = GetComponent<Rigidbody>();
-        if (isLocalPlayer) { 
-                Camera camToPlayer = Camera.main;
-                camToPlayer.transform.parent = this.transform;
-                camToPlayer.transform.position = new Vector3(0, 0, -1);
+        if (isLocalPlayer) {
+            Camera camToPlayer = Camera.main;
+            camToPlayer.transform.parent = this.transform;
+            camToPlayer.transform.position = new Vector3(0, 0, 0);
+
+            speedBar = GameObject.Find("Canvas").transform.Find("SpeedBar").gameObject;
 
         }
-        Material mat = this.GetComponent<MeshRenderer>().material;
-
+        
         //mat.EnableKeyword("_EMISSION");
         //mat.SetColor("_EmissionColor", Color.green);
         //mat.SetFloat("_EmissionMap", 10);
@@ -82,13 +84,51 @@ public class DarkFighterPlayer : NetworkBehaviour
         
     }
 
+    static bool ShouldEmissionBeEnabled(Color color)
+    {
+        return color.maxColorComponent > (0.1f / 255.0f);
+    }
+
 
     void UpdateSpeed(float speedDelta)
     {
-        if (Mathf.Abs (speed + speedDelta) < speedMax && (speed + speedDelta)>=0)
+        if (Mathf.Abs (speed + speedDelta) <= speedMax && (speed + speedDelta)>=0)
         {
             speed += speedDelta;
         }
+        else
+        {
+            if (Mathf.Abs(speed + speedDelta) > speedMax) {
+                speed = speedMax;
+            }
+            else
+            {
+                speed = 0;
+            }
+        }
+
+        /*
+         * Trying to change emissive scale value to glow the engine
+         *
+        Renderer render = this.GetComponent<MeshRenderer>();
+        Material mat = this.GetComponent<MeshRenderer>().material;
+        bool shouldEmissionBeEnabled = ShouldEmissionBeEnabled(render.material.GetColor("_EmissionColor"));
+        if (shouldEmissionBeEnabled)
+        {
+            render.material.EnableKeyword("_EMISSION");
+        }
+        else
+        {
+            render.material.DisableKeyword("_EMISSION");
+        }
+
+        
+        render.material.EnableKeyword("_EMISSION");
+        DynamicGI.SetEmissive(render, Color.white * 10);
+        render.UpdateGIMaterials();
+        
+        DynamicGI.UpdateEnvironment();
+        */
     }
 
     void ManageKeyboard()
@@ -136,6 +176,12 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
 
         ManageKeyboard();
+
+        SpeedBar speedbarScript = speedBar.GetComponent<SpeedBar>();
+        if (speedbarScript)
+        {
+            speedbarScript.updateUi(speed);
+        }
         
         rb.AddForce(rb.transform.forward * speed, ForceMode.Acceleration);
         rb.velocity.Scale(reduceVector);
