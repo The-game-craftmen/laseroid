@@ -7,66 +7,57 @@ public class StartGame : MonoBehaviour {
     public bool isAtStartup = true;
     public InputField IP;
     public InputField nickname;
+    public GameObject networkmanager;
+    public GameObject dataOverScene;
+    private DataOverScene dataOverSceneScript;
 
     NetworkClient myClient;
     // Use thTexts for initialization
     void Start () {
-		
-	}
+        dataOverSceneScript = dataOverScene.GetComponent<DataOverScene>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        LaserNetworkManager lnm = networkmanager.GetComponent<LaserNetworkManager>();
+        Debug.Log("update" + lnm.GetStatusConnection());
+        if (lnm && lnm.GetStatusConnection())
+        {
+            SceneManager.LoadScene("scenes/level1");
+        }
+
+    }
 
     public void Join()
     {
-    
-        GameObject dataOverScene = GameObject.Find("/DataOverScene");
-        if (dataOverScene != null)
+        if (dataOverSceneScript != null)
         {
-            DataOverScene dataOverSceneScript = dataOverScene.GetComponent<DataOverScene>();
-            if (dataOverSceneScript != null)
+            dataOverSceneScript.SetNickname(nickname.text);
+            LaserNetworkManager lnm = networkmanager.GetComponent<LaserNetworkManager>();
+            if (lnm)
             {
-                dataOverSceneScript.SetIp(IP.text);
-                dataOverSceneScript.SetNickname(nickname.text);
-                SceneManager.LoadScene("scenes/level1");
+                lnm.Join(IP.text);
+                //SceneManager.LoadScene("scenes/level1");
+            }
 
-            }
-            else
-            {
-                Debug.Log("data over Scene Script not found");
-            }
         }
-        else
-        {
-            Debug.Log("data over Scene not found");
-        }
-        SceneManager.LoadScene("scenes/level1");
+         
     }
 
     public void Host() { 
-   
-        GameObject dataOverScene = GameObject.Find("/DataOverScene");
-        if (dataOverScene != null)
+        if (dataOverSceneScript != null)
         {
-            DataOverScene dataOverSceneScript = dataOverScene.GetComponent<DataOverScene>();
-            if (dataOverSceneScript != null)
+            dataOverSceneScript.SetNickname(nickname.text);
+            LaserNetworkManager lnm = networkmanager.GetComponent<LaserNetworkManager>();
+            if (lnm)
             {
-                dataOverSceneScript.SetIsHost(true);
-                dataOverSceneScript.SetNickname(nickname.text);
-                SceneManager.LoadScene("scenes/level1");
+                lnm.Host();
+                //SceneManager.LoadScene("scenes/level1");
+            }
+            
 
-            }
-            else
-            {
-                Debug.Log("data over Scene Script not found");
-            }
         }
-        else
-        {
-            Debug.Log("data over Scene not found");
-        }
+   
     }
 
 

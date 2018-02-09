@@ -7,57 +7,80 @@ public class LaserNetworkManager : NetworkManager
 {
     public bool isAtStartup = true;
     private NetworkClient netClient = null;
+    private GameObject shipPrefab;
+    private bool statusConnection = false;
 
     NetworkClient myClient;
 
     // Use this for initialization
     void Start()
     {
-        GameObject dataOverScene = GameObject.Find("/DataOverScene");
-        if (dataOverScene != null)
-        {
-            Debug.Log("data over Scene found");
-            DataOverScene dataOverSceneScript = dataOverScene.GetComponent<DataOverScene>();
-            if (dataOverSceneScript != null)
-            {
-                Debug.Log("data over Scene Script found");
-                if (dataOverSceneScript.IsHost())
-                {
-                    netClient = this.StartHost();
-                }
-                else
-                {
-                    Debug.Log(dataOverSceneScript.GetIp());
-                    this.networkAddress = dataOverSceneScript.GetIp();
-                    netClient = this.StartClient();
-                }
-
-            }
-            else
-            {
-                Debug.Log("data over Scene Script not found");
-            }
-        }
-        else
-        {
-            Debug.Log("data over Scene not found");
-        }
-
+        shipPrefab = Resources.Load("ships/pf_dark_fighter_63") as GameObject;
     }
 
-    public override void OnClientError(NetworkConnection conn, int errorCode)
+    void Awake()
     {
-        base.OnClientError(conn, errorCode);
-        Debug.Log("Error Connection");
+        DontDestroyOnLoad(transform.gameObject);
+    }
+
+    public void Host()
+    {
+        netClient = this.StartHost();
+    }
+
+    public void Join(string _IP)
+    {
+        
+        this.networkAddress = _IP;
+        netClient = this.StartClient();
+        netClient.RegisterHandler(MsgType.Connect, ConnectedHandler);
+    }
+
+    public bool GetStatusConnection()
+    {
+        return statusConnection;
     }
 
     public override void OnStartClient(NetworkClient client)
     {
         base.OnStartClient(client);
+        Debug.Log("OnStartClient ");
         Debug.Log(client.connection);
-        Debug.Log(client.isConnected);
+        if (client.connection != null)
+        {
+            Debug.Log("HERARAER");
+            statusConnection = true;
+        }
     }
 
+    public void ConnectionErrorHandler(NetworkMessage netMsg)
+    {
+        Debug.Log("Error On connection");
+    }
+
+    public void ConnectionErrorHandlerTest(NetworkMessage netMsg)
+    {
+        Debug.Log("Error On test");
+    }
+
+    public void ConnectionErrorInfoHandler(NetworkMessage netMsg)
+    {
+        Debug.Log("Error On ibfo");
+    }    
+
+
+    public void ConnectedHandler(NetworkMessage netMsg)
+    {
+        Debug.Log(netMsg);
+        Debug.Log(client.connection);
+        Debug.Log(client.isConnected);
+        if (client.isConnected)
+        {
+            Debug.Log("HERARAER");
+            statusConnection = true;
+        }
+    }
+    
     // Update is called once per frame
     void Update()
     {
