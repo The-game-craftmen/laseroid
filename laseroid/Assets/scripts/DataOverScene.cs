@@ -53,4 +53,5 @@ public class DataOverScene : MonoBehaviour {
     {
         DontDestroyOnLoad(transform.gameObject);
     }
+    
 }

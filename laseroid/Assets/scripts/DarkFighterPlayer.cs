@@ -172,17 +172,19 @@ public class DarkFighterPlayer : NetworkBehaviour
     void Update () {
         if (!isLocalPlayer)
         {
+            Debug.Log(" Not localplyaer");
             return;
         }
-
+        Debug.Log(" localplyaer");
         ManageKeyboard();
-
-        SpeedBar speedbarScript = speedBar.GetComponent<SpeedBar>();
-        if (speedbarScript)
-        {
-            speedbarScript.updateUi(speed);
+        if (speedBar) { 
+            SpeedBar speedbarScript = speedBar.GetComponent<SpeedBar>();
+            if (speedbarScript)
+            {
+                speedbarScript.updateUi(speed);
+            }
         }
-        
+
         rb.AddForce(rb.transform.forward * speed, ForceMode.Acceleration);
         rb.velocity.Scale(reduceVector);
         

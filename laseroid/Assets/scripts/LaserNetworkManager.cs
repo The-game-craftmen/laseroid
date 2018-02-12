@@ -25,7 +25,9 @@ public class LaserNetworkManager : NetworkManager
 
     public void Host()
     {
+        Debug.Log("HOST Here");
         netClient = this.StartHost();
+        
     }
 
     public void Join(string _IP)
@@ -33,7 +35,6 @@ public class LaserNetworkManager : NetworkManager
         
         this.networkAddress = _IP;
         netClient = this.StartClient();
-        netClient.RegisterHandler(MsgType.Connect, ConnectedHandler);
     }
 
     public bool GetStatusConnection()
@@ -48,26 +49,34 @@ public class LaserNetworkManager : NetworkManager
         Debug.Log(client.connection);
         if (client.connection != null)
         {
-            Debug.Log("HERARAER");
+            Debug.Log("OnStartClient Connection Not null");
             statusConnection = true;
         }
     }
 
-    public void ConnectionErrorHandler(NetworkMessage netMsg)
+    public override void OnClientConnect(NetworkConnection conn)
     {
-        Debug.Log("Error On connection");
+        base.OnClientConnect(conn);
+        Debug.Log("OnClientConnect ");
+        Debug.Log(client.connection);
+        if (client.connection != null)
+        {
+            Debug.Log("OnClientConnect Connection Not null");
+            statusConnection = true;
+        }
     }
 
-    public void ConnectionErrorHandlerTest(NetworkMessage netMsg)
+    public override void OnClientError(NetworkConnection conn, int errorCode)
     {
-        Debug.Log("Error On test");
+        base.OnClientError(conn, errorCode);
+        Debug.Log("OnClientError ");
     }
 
-    public void ConnectionErrorInfoHandler(NetworkMessage netMsg)
+    public override void OnClientNotReady(NetworkConnection conn)
     {
-        Debug.Log("Error On ibfo");
-    }    
-
+        base.OnClientNotReady(conn);
+        Debug.Log("OnClientNotReady ");
+    }
 
     public void ConnectedHandler(NetworkMessage netMsg)
     {
@@ -76,29 +85,11 @@ public class LaserNetworkManager : NetworkManager
         Debug.Log(client.isConnected);
         if (client.isConnected)
         {
-            Debug.Log("HERARAER");
+            Debug.Log("Connection Handler is Connected");
             statusConnection = true;
         }
     }
-    
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    public override void OnStartServer()
-    {
-        base.OnStartServer();
-        
-    }
-
-    public override void OnClientConnect(NetworkConnection conn)
-    {
-        base.OnClientConnect(conn);
-        ClientScene.AddPlayer(0);
-        
-    }
+   
 }
 
     
