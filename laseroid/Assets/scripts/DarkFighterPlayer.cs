@@ -10,11 +10,13 @@ public class DarkFighterPlayer : NetworkBehaviour
     private const float speedMax = 10;
     [SyncVar]
     private int hitpoint = 100;
+    private int hitpointMax = 100;
     public GameObject bulletPrefab;
     private Vector3 reduceVector = new Vector3(0.8f, 0.8f, 0.8f);
     private const float stepAcceleration = 0.5f;
     private Rigidbody rb;
     private GameObject speedBar;
+    private GameObject healthBar;
 
     void Start()
     {
@@ -26,6 +28,7 @@ public class DarkFighterPlayer : NetworkBehaviour
             camToPlayer.transform.position = new Vector3(0, 0, 0);
 
             speedBar = GameObject.Find("Canvas").transform.Find("SpeedBar").gameObject;
+            healthBar = GameObject.Find("Canvas").transform.Find("HealthBar").gameObject;
 
         }
         
@@ -42,6 +45,7 @@ public class DarkFighterPlayer : NetworkBehaviour
     {
         hitpoint -= _hitpoint;
         if (hitpoint < 0) hitpoint = 0;
+        Debug.Log("SetDamage " + hitpoint);
     }
 
     [Command]
@@ -70,6 +74,7 @@ public class DarkFighterPlayer : NetworkBehaviour
 
     public void DoDamage(int _damage)
     {
+        Debug.Log("DoDamage");
         if (isServer)
         {
             this.hitpoint -= _damage;
@@ -110,6 +115,7 @@ public class DarkFighterPlayer : NetworkBehaviour
         /*
          * Trying to change emissive scale value to glow the engine
          *
+         
         Renderer render = this.GetComponent<MeshRenderer>();
         Material mat = this.GetComponent<MeshRenderer>().material;
         bool shouldEmissionBeEnabled = ShouldEmissionBeEnabled(render.material.GetColor("_EmissionColor"));
@@ -122,12 +128,13 @@ public class DarkFighterPlayer : NetworkBehaviour
             render.material.DisableKeyword("_EMISSION");
         }
 
-        
-        render.material.EnableKeyword("_EMISSION");
-        DynamicGI.SetEmissive(render, Color.white * 10);
-        render.UpdateGIMaterials();
-        
-        DynamicGI.UpdateEnvironment();
+
+        //render.material.EnableKeyword("_EMISSION");
+        //DynamicGI.SetEmissive(render, Color.white * 0.1f);
+        //render.UpdateGIMaterials();
+
+        //DynamicGI.UpdateEnvironment();
+        mat.SetColor("_EmissionColor", Color.white * 0.1f);
         */
     }
 
@@ -167,17 +174,10 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
     }
 
-
-    // Update is called once per frame
-    void Update () {
-        if (!isLocalPlayer)
+    void updateUi()
+    {
+        if (speedBar)
         {
-            Debug.Log(" Not localplyaer");
-            return;
-        }
-        Debug.Log(" localplyaer");
-        ManageKeyboard();
-        if (speedBar) { 
             SpeedBar speedbarScript = speedBar.GetComponent<SpeedBar>();
             if (speedbarScript)
             {
@@ -185,6 +185,26 @@ public class DarkFighterPlayer : NetworkBehaviour
             }
         }
 
+        if (healthBar)
+        {
+            HealthBar healthBarScript = healthBar.GetComponent<HealthBar>();
+            if (healthBarScript)
+            {
+                healthBarScript.UpdateSpeedBar((float) hitpoint / (float)hitpointMax );
+            }
+        }
+    }
+
+
+    // Update is called once per frame
+    void Update () {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+        ManageKeyboard();
+
+        updateUi();
         rb.AddForce(rb.transform.forward * speed, ForceMode.Acceleration);
         rb.velocity.Scale(reduceVector);
         

@@ -8,7 +8,7 @@ public class LaserNetworkManager : NetworkManager
     public bool isAtStartup = true;
     private NetworkClient netClient = null;
     private GameObject shipPrefab;
-    private bool statusConnection = false;
+    private bool statusConnection = false;//0; // -1 error on connection, 0 not yet connected, 1 connected
 
     NetworkClient myClient;
 
@@ -54,6 +54,12 @@ public class LaserNetworkManager : NetworkManager
         }
     }
 
+    public override void OnClientDisconnect(NetworkConnection conn)
+    {
+        base.OnClientDisconnect(conn);
+        Debug.Log("OnClientDisconnect");
+    }
+
     public override void OnClientConnect(NetworkConnection conn)
     {
         base.OnClientConnect(conn);
@@ -78,17 +84,7 @@ public class LaserNetworkManager : NetworkManager
         Debug.Log("OnClientNotReady ");
     }
 
-    public void ConnectedHandler(NetworkMessage netMsg)
-    {
-        Debug.Log(netMsg);
-        Debug.Log(client.connection);
-        Debug.Log(client.isConnected);
-        if (client.isConnected)
-        {
-            Debug.Log("Connection Handler is Connected");
-            statusConnection = true;
-        }
-    }
+
    
 }
 

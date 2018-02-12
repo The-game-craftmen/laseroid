@@ -32,4 +32,11 @@ public class HealthBar : MonoBehaviour {
             }
         }*/
     }
+
+    public void UpdateSpeedBar(float _hp)
+    {
+        Debug.Log("UpdateSpeedBar" + _hp);
+        Slider healthBar = (Slider)GetComponent<Slider>();
+        healthBar.value = _hp;
+    }
 }

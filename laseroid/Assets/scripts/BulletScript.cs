@@ -35,7 +35,7 @@ public class BulletScript : NetworkBehaviour
                 
                 if (shipControl != null)
                 {
-                    Debug.Log("damage");
+                    Debug.Log("damage" + this.netId);
                     shipControl.SetDamage(damage);
                 }else
                 {
