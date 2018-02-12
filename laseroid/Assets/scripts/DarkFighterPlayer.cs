@@ -44,7 +44,14 @@ public class DarkFighterPlayer : NetworkBehaviour
     public void SetDamage(int _hitpoint)
     {
         hitpoint -= _hitpoint;
-        if (hitpoint < 0) hitpoint = 0;
+        //if (hitpoint < 0) hitpoint = 0;
+        if (hitpoint <= 0)
+        {
+            GameObject explosion = Resources.Load("LoudExplosion") as GameObject;
+            GameObject expl = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
+            NetworkServer.Spawn(expl);
+            RpcRespawn();
+        }
         Debug.Log("SetDamage " + hitpoint);
     }
 
