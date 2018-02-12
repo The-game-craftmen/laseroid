@@ -76,26 +76,11 @@ public class DarkFighterPlayer : NetworkBehaviour
         if (isLocalPlayer)
         {
             transform.position = Vector3.zero;
+            hitpoint = hitpointMax;
         }
     }
 
-    public void DoDamage(int _damage)
-    {
-        Debug.Log("DoDamage");
-        if (isServer)
-        {
-            this.hitpoint -= _damage;
-            if (hitpoint <= 0)
-            {
-                GameObject explosion = Resources.Load("LoudExplosion") as GameObject;
-                GameObject expl = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
-                NetworkServer.Spawn(expl);
-                RpcRespawn();
-            }
-        }
-        
-    }
-
+   
     static bool ShouldEmissionBeEnabled(Color color)
     {
         return color.maxColorComponent > (0.1f / 255.0f);
