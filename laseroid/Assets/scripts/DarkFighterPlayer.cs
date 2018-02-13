@@ -17,6 +17,18 @@ public class DarkFighterPlayer : NetworkBehaviour
     private Rigidbody rb;
     private GameObject speedBar;
     private GameObject healthBar;
+    private GameObject floatingNameText = null;
+    protected GameObject targetUi = null;
+
+    public GameObject getFloatingNameText()
+    {
+        return this.floatingNameText;
+    }
+
+    public void setFloatingNameText(GameObject flText)
+    {
+        this.floatingNameText = flText;
+    }
 
     void Start()
     {
@@ -41,6 +53,100 @@ public class DarkFighterPlayer : NetworkBehaviour
 
     }
 
+    public void setTargetUi(GameObject _targetUI)
+    {
+        this.targetUi = _targetUI;
+    }
+
+    public GameObject getTargetUi()
+    {
+        return targetUi;
+    }
+
+    public float getPrcentHull()
+    {
+        return (float)hitpoint / (float)hitpointMax;
+    }
+
+    void OnGUI()
+    {
+        if (isLocalPlayer)
+        {
+            GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
+            GameObject canvas = GameObject.Find("Canvas");
+            Debug.Log("nb ship" + listOfShips.Length);
+            for (int itShip = 0; itShip < listOfShips.Length; itShip++)
+            {
+                Debug.Log("new ship");
+                DarkFighterPlayer shipScript = listOfShips[itShip].GetComponent<DarkFighterPlayer>();
+                if (shipScript != null)
+                {
+                    if (shipScript.netId != this.netId) { 
+                        Debug.Log("new ship script found" );
+                        if (shipScript.getFloatingNameText() == null)
+                        {
+                            Debug.Log("new ship no floating" + shipScript.netId + "/" + this.netId);
+                            GameObject floatingText = Resources.Load("ui/PanelShip") as GameObject;
+                            GameObject targetUI = Resources.Load("ui/TargetImage") as GameObject;
+                            GameObject floatingTextInstance = Instantiate(floatingText) as GameObject;
+                            GameObject targetUIInstance = Instantiate(targetUI) as GameObject;
+                            shipScript.setFloatingNameText(floatingTextInstance);
+                            shipScript.setTargetUi(targetUIInstance);
+                            floatingTextInstance.transform.SetParent(canvas.transform);
+                        }
+                        else
+                        {
+                            Debug.Log("new ship have a floating");
+                            Camera camera = GetComponent<Camera>();
+
+                            Vector3 screenPos = Camera.main.WorldToScreenPoint(listOfShips[itShip].transform.position);
+                            GameObject floatingNameText = shipScript.getFloatingNameText();
+                            GameObject targetUI = shipScript.getTargetUi();
+                            if (screenPos.z > 0 && screenPos.y > 0 && screenPos.x > 0)
+                            {
+                                targetUI.SetActive(true);
+                                targetUI.transform.position = screenPos;
+                                screenPos.x -= listOfShips[itShip].name.Length;
+                                screenPos.y += 40;
+                                float distance = calcDistance(listOfShips[itShip]);
+                                floatingNameText.SetActive(true);
+                                floatingNameText.transform.position = screenPos;
+                                GameObject distanceObj = floatingNameText.transform.Find("distance").gameObject;
+
+                                PanelFollowingScript pf = floatingNameText.GetComponent<PanelFollowingScript>();
+                                if (pf)
+                                {
+                                    pf.updateUi("test", shipScript.getPrcentHull(), distance);
+                                }
+
+                            }
+                            else
+                            {
+                                floatingNameText.SetActive(false);
+                                targetUI.SetActive(false);
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    private float calcDistance(GameObject target)
+    {
+        float value = 0;
+
+        Vector3 posTarget = target.transform.position;
+        float dx = posTarget.x - transform.position.x;
+        float dy = posTarget.y - transform.position.y;
+        float dz = posTarget.z - transform.position.z;
+
+        value = (float)Mathf.Round(Mathf.Sqrt(dx * dx + dy * dy + dz * dz));
+
+        return value;
+    }
+
     public void SetDamage(int _hitpoint)
     {
         hitpoint -= _hitpoint;
@@ -52,7 +158,6 @@ public class DarkFighterPlayer : NetworkBehaviour
             NetworkServer.Spawn(expl);
             RpcRespawn();
         }
-        Debug.Log("SetDamage " + hitpoint);
     }
 
     [Command]

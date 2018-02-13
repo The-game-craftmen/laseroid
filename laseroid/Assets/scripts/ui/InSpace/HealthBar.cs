@@ -3,39 +3,8 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class HealthBar : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        /*GameObject PlayerObject = GameObject.Find("PlayerOverScene");
-        if (PlayerObject)
-        {
-            PlayerScript ps = PlayerObject.GetComponent<PlayerScript>();
-            if (ps)
-            {
-                GameObject plShip = ps.getShip();
-                if (plShip != null)
-                {
-                    ShipScript shipScript = plShip.GetComponent<ShipScript>();
-                    if (shipScript)
-                    {
-                        Slider healthBar = (Slider)GetComponent<Slider>();
-                        healthBar.value = shipScript.getPrcentHull();
-                    }
-
-
-                }
-            }
-        }*/
-    }
-
     public void UpdateSpeedBar(float _hp)
     {
-        Debug.Log("UpdateSpeedBar" + _hp);
         Slider healthBar = (Slider)GetComponent<Slider>();
         healthBar.value = _hp;
     }
