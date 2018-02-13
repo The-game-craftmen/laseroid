@@ -74,18 +74,14 @@ public class DarkFighterPlayer : NetworkBehaviour
         {
             GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
             GameObject canvas = GameObject.Find("Canvas");
-            Debug.Log("nb ship" + listOfShips.Length);
             for (int itShip = 0; itShip < listOfShips.Length; itShip++)
             {
-                Debug.Log("new ship");
                 DarkFighterPlayer shipScript = listOfShips[itShip].GetComponent<DarkFighterPlayer>();
                 if (shipScript != null)
                 {
                     if (shipScript.netId != this.netId) { 
-                        Debug.Log("new ship script found" );
                         if (shipScript.getFloatingNameText() == null)
                         {
-                            Debug.Log("new ship no floating" + shipScript.netId + "/" + this.netId);
                             GameObject floatingText = Resources.Load("ui/PanelShip") as GameObject;
                             GameObject targetUI = Resources.Load("ui/TargetImage") as GameObject;
                             GameObject floatingTextInstance = Instantiate(floatingText) as GameObject;
@@ -93,10 +89,10 @@ public class DarkFighterPlayer : NetworkBehaviour
                             shipScript.setFloatingNameText(floatingTextInstance);
                             shipScript.setTargetUi(targetUIInstance);
                             floatingTextInstance.transform.SetParent(canvas.transform);
+                            targetUIInstance.transform.SetParent(canvas.transform);
                         }
                         else
                         {
-                            Debug.Log("new ship have a floating");
                             Camera camera = GetComponent<Camera>();
 
                             Vector3 screenPos = Camera.main.WorldToScreenPoint(listOfShips[itShip].transform.position);
