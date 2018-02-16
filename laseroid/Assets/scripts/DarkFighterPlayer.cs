@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class DarkFighterPlayer : NetworkBehaviour
@@ -8,7 +9,7 @@ public class DarkFighterPlayer : NetworkBehaviour
     private float torqueStep = 100;
     private float speed = 0;
     private const float speedMax = 10;
-    [SyncVar]
+    [SyncVar(hook = "OnChangeHitPoints")]
     private int hitpoint = 100;
     private int hitpointMax = 100;
     public GameObject bulletPrefab;
@@ -19,6 +20,8 @@ public class DarkFighterPlayer : NetworkBehaviour
     private GameObject healthBar;
     private GameObject floatingNameText = null;
     protected GameObject targetUi = null;
+    [SyncVar]
+    private string nickname = null;
 
     public GameObject getFloatingNameText()
     {
@@ -41,7 +44,7 @@ public class DarkFighterPlayer : NetworkBehaviour
 
             speedBar = GameObject.Find("Canvas").transform.Find("SpeedBar").gameObject;
             healthBar = GameObject.Find("Canvas").transform.Find("HealthBar").gameObject;
-
+            hitpoint = hitpointMax;
         }
         
         //mat.EnableKeyword("_EMISSION");
@@ -72,6 +75,16 @@ public class DarkFighterPlayer : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
+            //if (nickname == null) { 
+            GameObject canvasNickname = GameObject.Find("CanvasStart/nickname");
+            if (canvasNickname) { 
+                InputField nickNameField = canvasNickname.GetComponent<InputField>();
+                if (nickNameField)
+                {
+                    nickname = nickNameField.text;
+                }
+            }
+            //}
             GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
             GameObject canvas = GameObject.Find("Canvas");
             for (int itShip = 0; itShip < listOfShips.Length; itShip++)
@@ -104,7 +117,7 @@ public class DarkFighterPlayer : NetworkBehaviour
                                 targetUI.transform.position = screenPos;
                                 screenPos.x -= listOfShips[itShip].name.Length;
                                 screenPos.y += 40;
-                                float distance = calcDistance(listOfShips[itShip]);
+                                float distance = CalcDistance(listOfShips[itShip]);
                                 floatingNameText.SetActive(true);
                                 floatingNameText.transform.position = screenPos;
                                 GameObject distanceObj = floatingNameText.transform.Find("distance").gameObject;
@@ -112,7 +125,7 @@ public class DarkFighterPlayer : NetworkBehaviour
                                 PanelFollowingScript pf = floatingNameText.GetComponent<PanelFollowingScript>();
                                 if (pf)
                                 {
-                                    pf.updateUi("test", shipScript.getPrcentHull(), distance);
+                                    pf.updateUi(shipScript.GetNickName(), shipScript.getPrcentHull(), distance);
                                 }
 
                             }
@@ -129,7 +142,7 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
     }
 
-    private float calcDistance(GameObject target)
+    private float CalcDistance(GameObject target)
     {
         float value = 0;
 
@@ -259,7 +272,16 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
         else if (Input.GetKey(KeyCode.Escape) == true)
         {
+            GameObject lnm = GameObject.Find("NetworkManager");
+            if (lnm) { 
+                LaserNetworkManager lnmScript = lnm.GetComponent<LaserNetworkManager>();
+                if (lnmScript)
+                {
+                    lnmScript.StopClient();
+                }
+            }
             Application.Quit();
+            
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -267,7 +289,7 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
     }
 
-    void updateUi()
+    void UpdateUi()
     {
         if (speedBar)
         {
@@ -278,12 +300,15 @@ public class DarkFighterPlayer : NetworkBehaviour
             }
         }
 
-        if (healthBar)
-        {
+    }
+
+    void OnChangeHitPoints(int _hp)
+    {
+        if (healthBar) {
             HealthBar healthBarScript = healthBar.GetComponent<HealthBar>();
             if (healthBarScript)
             {
-                healthBarScript.UpdateSpeedBar((float) hitpoint / (float)hitpointMax );
+                healthBarScript.UpdateHealthBar((float)_hp / (float)hitpointMax);
             }
         }
     }
@@ -297,9 +322,14 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
         ManageKeyboard();
 
-        updateUi();
+        UpdateUi();
         rb.AddForce(rb.transform.forward * speed, ForceMode.Acceleration);
         rb.velocity.Scale(reduceVector);
         
+    }
+
+    public string GetNickName()
+    {
+        return nickname;
     }
 }

@@ -37,6 +37,11 @@ public class LaserNetworkManager : NetworkManager
         netClient = this.StartClient();
     }
 
+    public void StopClient()
+    {
+        netClient.Disconnect();
+    }
+
     public bool GetStatusConnection()
     {
         return statusConnection;
