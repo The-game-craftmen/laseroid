@@ -9,7 +9,7 @@ public class LaserNetworkManager : NetworkManager
     private NetworkClient netClient = null;
     private GameObject shipPrefab;
     private bool statusConnection = false;//0; // -1 error on connection, 0 not yet connected, 1 connected
-
+    private bool isHost = false;
     NetworkClient myClient;
 
     // Use this for initialization
@@ -26,6 +26,7 @@ public class LaserNetworkManager : NetworkManager
     public void Host()
     {
         Debug.Log("HOST Here");
+        isHost = true;
         netClient = this.StartHost();
         
     }
@@ -39,7 +40,9 @@ public class LaserNetworkManager : NetworkManager
 
     public void StopClient()
     {
-        netClient.Disconnect();
+        if (!isHost) { 
+            netClient.Disconnect();
+        }
     }
 
     public bool GetStatusConnection()

@@ -10,7 +10,6 @@ public class StartGame : MonoBehaviour {
     public GameObject networkmanager;
     public GameObject dataOverScene;
     private DataOverScene dataOverSceneScript;
-    private int frame = -1;
 
     NetworkClient myClient;
 
@@ -23,26 +22,20 @@ public class StartGame : MonoBehaviour {
      // Update is called once per frame
      void Update () {
          LaserNetworkManager lnm = networkmanager.GetComponent<LaserNetworkManager>();
-         if (lnm && lnm.GetStatusConnection() && frame == -1 )
-         {
-             frame = 0;
-
-         }
-         if (frame > 50)
+         if (lnm && lnm.GetStatusConnection() )
          {
              GameObject canvasStart = GameObject.Find("CanvasStart");
-             if (canvasStart)
+            GameObject stateObject = GameObject.Find("GameState");
+             if (canvasStart && stateObject)
              {
-                 canvasStart.SetActive(false);
+                canvasStart.SetActive(false);
+                GameState gsScript = stateObject.GetComponent<GameState>();
+                if (gsScript)
+                {
+                    gsScript.SetState(GameState.C_STATE_INGAME);
+                }
              }
          }
-         else
-         {
-             if (lnm && lnm.GetStatusConnection()){ 
-                 frame += 1;
-             }
-         }
-
 
      }
 

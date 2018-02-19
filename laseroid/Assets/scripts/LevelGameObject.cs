@@ -8,8 +8,8 @@ public class LevelGameObject : NetworkBehaviour
 
 	// Use this for initialization
 	void Start () {
-        /*Debug.Log("Start LevelGAmeObject 1");
-        if (!isLocalPlayer)
+        Debug.Log("Start LevelGAmeObject 1");
+        /*if (!isLocalPlayer)
         {
             return;
         }

@@ -7,6 +7,7 @@ using UnityEngine;
 public class DarkFighterPlayer : NetworkBehaviour
 {
     private float torqueStep = 100;
+    [SyncVar]
     private float speed = 0;
     private const float speedMax = 10;
     [SyncVar(hook = "OnChangeHitPoints")]
@@ -16,10 +17,12 @@ public class DarkFighterPlayer : NetworkBehaviour
     private Vector3 reduceVector = new Vector3(0.8f, 0.8f, 0.8f);
     private const float stepAcceleration = 0.5f;
     private Rigidbody rb;
+    private GameState gameStateScript;
     private GameObject speedBar;
     private GameObject healthBar;
     private GameObject floatingNameText = null;
     protected GameObject targetUi = null;
+    private float ticksExitMenu ;
     [SyncVar]
     private string nickname = null;
 
@@ -45,6 +48,12 @@ public class DarkFighterPlayer : NetworkBehaviour
             speedBar = GameObject.Find("Canvas").transform.Find("SpeedBar").gameObject;
             healthBar = GameObject.Find("Canvas").transform.Find("HealthBar").gameObject;
             hitpoint = hitpointMax;
+
+            GameObject gm = GameObject.Find("GameState");
+            if (gm)
+            {
+                gameStateScript = gm.GetComponent<GameState>();
+            }
         }
         
         //mat.EnableKeyword("_EMISSION");
@@ -244,7 +253,55 @@ public class DarkFighterPlayer : NetworkBehaviour
         */
     }
 
+    [Command]
+    void CmdUpdateSpeed(float _speedDelta)
+    {
+        if (Mathf.Abs(speed + _speedDelta) <= speedMax && (speed + _speedDelta) >= 0)
+        {
+            speed += _speedDelta;
+        }
+        else
+        {
+            if (Mathf.Abs(speed + _speedDelta) > speedMax)
+            {
+                speed = speedMax;
+            }
+            else
+            {
+                speed = 0;
+            }
+        }
+    }
+
     void ManageKeyboard()
+    {
+        if (gameStateScript)
+        {
+            if (gameStateScript.GetState() == GameState.C_STATE_INGAME)
+            {
+                ManageKeyboardInGame();
+            }
+            else if (gameStateScript.GetState() == GameState.C_STATE_EXITMENU && (Time.time - ticksExitMenu) > 1) 
+            {
+                Debug.Log("EXITMENU GAME STATE");
+                if (Input.GetKey(KeyCode.Escape) == true)
+                {
+                    GameObject exitPanel = GameObject.Find("Canvas").transform.Find("PanelExit").gameObject;
+                    if (exitPanel)
+                    {
+                        exitPanel.SetActive(false);
+                    }
+                    if (gameStateScript)
+                    {
+                        gameStateScript.SetState(GameState.C_STATE_INGAME);
+                        ticksExitMenu = Time.time;
+                    }
+                }
+            }
+        }
+    }
+
+    void ManageKeyboardInGame()
     {
         if (Input.GetKey(KeyCode.Z) == true)
         {
@@ -264,15 +321,28 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
         else if (Input.GetKey(KeyCode.A) == true)
         {
-            UpdateSpeed(stepAcceleration);
+            CmdUpdateSpeed(stepAcceleration);
         }
         else if (Input.GetKey(KeyCode.W) == true)
         {
-            UpdateSpeed(-stepAcceleration);
+            CmdUpdateSpeed(-stepAcceleration);
         }
         else if (Input.GetKey(KeyCode.Escape) == true)
         {
-            GameObject lnm = GameObject.Find("NetworkManager");
+            if (Time.time - ticksExitMenu > 1)
+            {
+                GameObject exitPanel = GameObject.Find("Canvas").transform.Find("PanelExit").gameObject;
+                if (exitPanel)
+                {
+                    exitPanel.SetActive(true);
+                    if (gameStateScript)
+                    {
+                        gameStateScript.SetState(GameState.C_STATE_EXITMENU);
+                    }
+                    ticksExitMenu = Time.time;
+                }
+            }
+            /*GameObject lnm = GameObject.Find("NetworkManager");
             if (lnm) { 
                 LaserNetworkManager lnmScript = lnm.GetComponent<LaserNetworkManager>();
                 if (lnmScript)
@@ -280,8 +350,8 @@ public class DarkFighterPlayer : NetworkBehaviour
                     lnmScript.StopClient();
                 }
             }
-            Application.Quit();
-            
+            Application.Quit();*/
+
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -316,15 +386,16 @@ public class DarkFighterPlayer : NetworkBehaviour
 
     // Update is called once per frame
     void Update () {
-        if (!isLocalPlayer)
+        if (isLocalPlayer)
         {
-            return;
-        }
-        ManageKeyboard();
+            ManageKeyboard();
 
-        UpdateUi();
-        rb.AddForce(rb.transform.forward * speed, ForceMode.Acceleration);
-        rb.velocity.Scale(reduceVector);
+            UpdateUi();
+        }
+        if(isServer) { 
+            rb.AddForce(rb.transform.forward * speed, ForceMode.Acceleration);
+            rb.velocity.Scale(reduceVector);
+        }
         
     }
 
