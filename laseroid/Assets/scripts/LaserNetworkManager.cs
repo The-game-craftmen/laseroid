@@ -68,6 +68,11 @@ public class LaserNetworkManager : NetworkManager
                     GameObject.Find("CanvasStart").transform.Find("PanelConnexion").gameObject.SetActive(false);
                     GameObject.Find("CanvasStart").transform.Find("PanellNoConnection").gameObject.SetActive(true);
                 }
+                else
+                {
+                    GameObject.Find("Canvas").transform.Find("PanelLostConnection").gameObject.SetActive(true);
+                    gs.SetState(GameState.C_STATE_LOSTCONNECTION);
+                }
             }
         }
     }

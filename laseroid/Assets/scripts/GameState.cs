@@ -7,6 +7,7 @@ public class GameState : MonoBehaviour {
     public const int C_STATE_STARTMENU = 1;
     public const int C_STATE_INGAME = 2;
     public const int C_STATE_EXITMENU = 3;
+    public const int C_STATE_LOSTCONNECTION = 4;
 	
     public void SetState(int _state)
     {
