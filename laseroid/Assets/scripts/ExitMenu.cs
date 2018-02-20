@@ -37,7 +37,7 @@ public class ExitMenu : MonoBehaviour {
             LaserNetworkManager lnmScript = lnm.GetComponent<LaserNetworkManager>();
             if (lnmScript)
             {
-                lnmScript.StopClient();
+                lnmScript.LnmStopClient();
             }
         }
         Application.Quit();

@@ -18,27 +18,19 @@ public class LaserNetworkManager : NetworkManager
         shipPrefab = Resources.Load("ships/pf_dark_fighter_63") as GameObject;
     }
 
-    void Awake()
-    {
-        DontDestroyOnLoad(transform.gameObject);
-    }
-
     public void Host()
     {
-        Debug.Log("HOST Here");
         isHost = true;
         netClient = this.StartHost();
-        
     }
 
     public void Join(string _IP)
-    {
-        
+    {        
         this.networkAddress = _IP;
         netClient = this.StartClient();
     }
 
-    public void StopClient()
+    public void LnmStopClient()
     {
         if (!isHost) { 
             netClient.Disconnect();
@@ -65,7 +57,19 @@ public class LaserNetworkManager : NetworkManager
     public override void OnClientDisconnect(NetworkConnection conn)
     {
         base.OnClientDisconnect(conn);
-        Debug.Log("OnClientDisconnect");
+        GameObject gm = GameObject.Find("GameState");
+        if (gm)
+        {
+            GameState gs = gm.GetComponent<GameState>();
+            if (gs)
+            {
+                if (gs.GetState() == GameState.C_STATE_STARTMENU)
+                {
+                    GameObject.Find("CanvasStart").transform.Find("PanelConnexion").gameObject.SetActive(false);
+                    GameObject.Find("CanvasStart").transform.Find("PanellNoConnection").gameObject.SetActive(true);
+                }
+            }
+        }
     }
 
     public override void OnClientConnect(NetworkConnection conn)

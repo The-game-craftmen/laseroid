@@ -19,6 +19,12 @@ public class StartGame : MonoBehaviour {
          dataOverSceneScript = dataOverScene.GetComponent<DataOverScene>();
      }
 
+    public void Retry()
+    {
+        GameObject.Find("CanvasStart").transform.Find("PanelConnexion").gameObject.SetActive(true);
+        GameObject.Find("CanvasStart").transform.Find("PanellNoConnection").gameObject.SetActive(false);
+    }
+
      // Update is called once per frame
      void Update () {
          LaserNetworkManager lnm = networkmanager.GetComponent<LaserNetworkManager>();
