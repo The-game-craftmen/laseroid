@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class LaserNetworkManager : NetworkManager
 {
     public bool isAtStartup = true;
+    public GameObject gmi;
     private NetworkClient netClient = null;
     private GameObject shipPrefab;
     private bool statusConnection = false;//0; // -1 error on connection, 0 not yet connected, 1 connected
@@ -23,6 +24,8 @@ public class LaserNetworkManager : NetworkManager
         isHost = true;
         netClient = this.StartHost();
     }
+
+
 
     public void Join(string _IP)
     {        
@@ -51,6 +54,7 @@ public class LaserNetworkManager : NetworkManager
         {
             Debug.Log("OnStartClient Connection Not null");
             statusConnection = true;
+            
         }
     }
 
@@ -86,7 +90,28 @@ public class LaserNetworkManager : NetworkManager
         {
             Debug.Log("OnClientConnect Connection Not null");
             statusConnection = true;
+            GameObject data = GameObject.Find("DataOverScene");
+            Debug.Log(data);
+            if (data)
+            {
+                DataOverScene dataScript = data.GetComponent<DataOverScene>();
+                Debug.Log(dataScript);
+                if (dataScript)
+                {
+                    if (gmi)
+                    {
+                        GameMatchInfo gmScript = gmi.GetComponent<GameMatchInfo>();
+                        Debug.Log(gmScript);
+                        Debug.Log(dataScript.GetNickname());
+                        if (gmScript)
+                        {
+                            gmScript.CmdAddPlayer(client.connection.connectionId, dataScript.GetNickname());
+                        }
+                    }
+                }
+            }
         }
+
     }
 
     public override void OnClientError(NetworkConnection conn, int errorCode)

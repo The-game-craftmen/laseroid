@@ -45,6 +45,11 @@ public class StartGame : MonoBehaviour {
 
      }
 
+    void SetNickname()
+    {
+        dataOverSceneScript.SetNickname(nickname.text);
+    }
+
      public void Join()
      {
          if (dataOverSceneScript != null)

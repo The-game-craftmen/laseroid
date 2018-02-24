@@ -24,7 +24,7 @@ public class DarkFighterPlayer : NetworkBehaviour
     protected GameObject targetUi = null;
     private float ticksExitMenu ;
     [SyncVar]
-    private string nickname = null;
+    private string nickname;
 
     public GameObject getFloatingNameText()
     {
@@ -36,10 +36,18 @@ public class DarkFighterPlayer : NetworkBehaviour
         this.floatingNameText = flText;
     }
 
+    [Command]
+    void CmdSetNickname(string _name)
+    {
+        nickname = _name;
+    }
+
     void Start()
     {
-        
+        NetworkServer.SpawnObjects();
         rb = GetComponent<Rigidbody>();
+        Debug.Log(isLocalPlayer);
+        Debug.Log(isClient);
         if (isLocalPlayer) {
             Camera camToPlayer = Camera.main;
             camToPlayer.transform.parent = this.transform;
@@ -54,6 +62,17 @@ public class DarkFighterPlayer : NetworkBehaviour
             {
                 gameStateScript = gm.GetComponent<GameState>();
             }
+            GameObject data = GameObject.Find("DataOverScene");
+            if (data)
+            {
+                DataOverScene dos = data.GetComponent<DataOverScene>();
+                if (dos)
+                {
+                    //nickname = dos.GetNickname();
+                    CmdSetNickname(dos.GetNickname());
+                    Debug.Log("NICKNAME " + nickname);
+                }
+            }
         }
         
         //mat.EnableKeyword("_EMISSION");
@@ -65,7 +84,7 @@ public class DarkFighterPlayer : NetworkBehaviour
 
     }
 
-    public void setTargetUi(GameObject _targetUI)
+    public void SetTargetUi(GameObject _targetUI)
     {
         this.targetUi = _targetUI;
     }
@@ -84,23 +103,42 @@ public class DarkFighterPlayer : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            //if (nickname == null) { 
-            GameObject canvasNickname = GameObject.Find("CanvasStart/nickname");
-            if (canvasNickname) { 
-                InputField nickNameField = canvasNickname.GetComponent<InputField>();
-                if (nickNameField)
+            Debug.Log("GMI");
+            /*
+            GameMatchInfo gmiscript = this.GetComponent<GameMatchInfo>();
+            Debug.Log("GMISc");
+            Debug.Log(gmiscript);
+            if (gmiscript)
+            {
+                GameMatchInfo.ListOfPlayer listPlayer = gmiscript.GetListOfPlayer();
+                IEnumerator<GameMatchInfo.PlayerInfo> enu = listPlayer.GetEnumerator();
+                string pl = "";
+                while (enu.MoveNext())
                 {
-                    nickname = nickNameField.text;
+                    GameMatchInfo.PlayerInfo temp = enu.Current;
+                    pl += temp.name;
+                }
+                Debug.Log("list of name " + pl);
+                GameObject listPLayerGui = GameObject.Find("Canvas").transform.Find("listPLayer").gameObject;
+                Debug.Log("listp");
+                Debug.Log(listPLayerGui);
+                if (listPLayerGui)
+                {
+                    InputField lp = listPLayerGui.GetComponent<InputField>();
+                    lp.text = pl;
                 }
             }
-            //}
+            */
+            
             GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
             GameObject canvas = GameObject.Find("Canvas");
+            string pls = "";
             for (int itShip = 0; itShip < listOfShips.Length; itShip++)
             {
                 DarkFighterPlayer shipScript = listOfShips[itShip].GetComponent<DarkFighterPlayer>();
                 if (shipScript != null)
                 {
+                    pls += shipScript.nickname;
                     if (shipScript.netId != this.netId) { 
                         if (shipScript.getFloatingNameText() == null)
                         {
@@ -109,7 +147,7 @@ public class DarkFighterPlayer : NetworkBehaviour
                             GameObject floatingTextInstance = Instantiate(floatingText) as GameObject;
                             GameObject targetUIInstance = Instantiate(targetUI) as GameObject;
                             shipScript.setFloatingNameText(floatingTextInstance);
-                            shipScript.setTargetUi(targetUIInstance);
+                            shipScript.SetTargetUi(targetUIInstance);
                             floatingTextInstance.transform.SetParent(canvas.transform);
                             targetUIInstance.transform.SetParent(canvas.transform);
                         }
@@ -147,6 +185,14 @@ public class DarkFighterPlayer : NetworkBehaviour
                     }
 
                 }
+            }
+            GameObject listPLayerGui = GameObject.Find("Canvas").transform.Find("listPLayer").gameObject;
+            Debug.Log("listp");
+            Debug.Log(listPLayerGui);
+            if (listPLayerGui)
+            {
+                InputField lp = listPLayerGui.GetComponent<InputField>();
+                lp.text = pls;
             }
         }
     }
