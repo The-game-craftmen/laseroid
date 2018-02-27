@@ -47,8 +47,7 @@ public class BulletScript : NetworkBehaviour
                 if (shipControl != null)
                 {
                     Debug.Log("damage" + this.netId);
-                    shipControl.SetDamage(damage);
-                    if (shipControl.GetHitPoint() <= 0)
+                    if ((shipControl.GetHitPoint()- damage) <= 0)
                     {
                         GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
                         for (int itShip = 0; itShip < listOfShips.Length; itShip++)
@@ -60,6 +59,8 @@ public class BulletScript : NetworkBehaviour
                             }
                         }
                     }
+                    shipControl.SetDamage(damage);
+                    
                 }else
                 {
                     Debug.Log("not damage");

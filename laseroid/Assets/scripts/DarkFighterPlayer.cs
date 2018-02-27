@@ -193,7 +193,9 @@ public class DarkFighterPlayer : NetworkBehaviour
             GameObject explosion = Resources.Load("LoudExplosion") as GameObject;
             GameObject expl = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
             NetworkServer.Spawn(expl);
-            RpcRespawn();
+            //RpcRespawn();
+            transform.position = Vector3.zero;
+            hitpoint = hitpointMax;
         }
     }
 
