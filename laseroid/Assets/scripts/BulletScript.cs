@@ -6,11 +6,22 @@ public class BulletScript : NetworkBehaviour
 {
     private float timer;
     private int damage;
+    private NetworkInstanceId ShipId;
     // Use this for initialization
     void Start () {
         timer = 0;
         damage = 20;
 	}
+
+    public void SetShipId(NetworkInstanceId _id)
+    {
+        ShipId = _id;
+    }
+
+    public NetworkInstanceId GetShipId()
+    {
+        return ShipId;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -37,6 +48,18 @@ public class BulletScript : NetworkBehaviour
                 {
                     Debug.Log("damage" + this.netId);
                     shipControl.SetDamage(damage);
+                    if (shipControl.GetHitPoint() <= 0)
+                    {
+                        GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
+                        for (int itShip = 0; itShip < listOfShips.Length; itShip++)
+                        {
+                            DarkFighterPlayer shipScript = listOfShips[itShip].GetComponent<DarkFighterPlayer>();
+                            if (shipScript != null && shipScript.netId == ShipId)
+                            {
+                                shipScript.IncScore();
+                            }
+                        }
+                    }
                 }else
                 {
                     Debug.Log("not damage");

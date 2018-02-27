@@ -22,6 +22,8 @@ public class DarkFighterPlayer : NetworkBehaviour
     private GameObject healthBar;
     private GameObject floatingNameText = null;
     protected GameObject targetUi = null;
+    [SyncVar]
+    private int score = 0;
     private float ticksExitMenu ;
     [SyncVar]
     private string nickname;
@@ -101,35 +103,7 @@ public class DarkFighterPlayer : NetworkBehaviour
 
     void OnGUI()
     {
-        if (isLocalPlayer)
-        {
-            Debug.Log("GMI");
-            /*
-            GameMatchInfo gmiscript = this.GetComponent<GameMatchInfo>();
-            Debug.Log("GMISc");
-            Debug.Log(gmiscript);
-            if (gmiscript)
-            {
-                GameMatchInfo.ListOfPlayer listPlayer = gmiscript.GetListOfPlayer();
-                IEnumerator<GameMatchInfo.PlayerInfo> enu = listPlayer.GetEnumerator();
-                string pl = "";
-                while (enu.MoveNext())
-                {
-                    GameMatchInfo.PlayerInfo temp = enu.Current;
-                    pl += temp.name;
-                }
-                Debug.Log("list of name " + pl);
-                GameObject listPLayerGui = GameObject.Find("Canvas").transform.Find("listPLayer").gameObject;
-                Debug.Log("listp");
-                Debug.Log(listPLayerGui);
-                if (listPLayerGui)
-                {
-                    InputField lp = listPLayerGui.GetComponent<InputField>();
-                    lp.text = pl;
-                }
-            }
-            */
-            
+        if (isLocalPlayer) { 
             GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
             GameObject canvas = GameObject.Find("Canvas");
             string pls = "";
@@ -139,6 +113,7 @@ public class DarkFighterPlayer : NetworkBehaviour
                 if (shipScript != null)
                 {
                     pls += shipScript.nickname;
+                    pls += shipScript.score + " / ";
                     if (shipScript.netId != this.netId) { 
                         if (shipScript.getFloatingNameText() == null)
                         {
@@ -187,8 +162,6 @@ public class DarkFighterPlayer : NetworkBehaviour
                 }
             }
             GameObject listPLayerGui = GameObject.Find("Canvas").transform.Find("listPLayer").gameObject;
-            Debug.Log("listp");
-            Debug.Log(listPLayerGui);
             if (listPLayerGui)
             {
                 InputField lp = listPLayerGui.GetComponent<InputField>();
@@ -225,13 +198,14 @@ public class DarkFighterPlayer : NetworkBehaviour
     }
 
     [Command]
-    private void CmdFire(Vector3 playerPosition, Vector3 playerForward, Quaternion playerRotation)
+    private void CmdFire(NetworkInstanceId _id,Vector3 playerPosition, Vector3 playerForward, Quaternion playerRotation)
     {
         Vector3 location = playerPosition + playerForward * 2;
         var bullet = (GameObject)Instantiate(bulletPrefab);
+        BulletScript bs = bullet.GetComponent<BulletScript>();
+        bs.SetShipId(_id);
         NetworkServer.Spawn(bullet);
         Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
-        
         rbBullet.transform.position = location;
         rbBullet.transform.rotation = playerRotation;
         rbBullet.AddForce(rbBullet.transform.forward * 1500, ForceMode.Acceleration);
@@ -401,7 +375,7 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Space))
         {
-            CmdFire(rb.transform.position, rb.transform.forward, rb.transform.rotation);
+            CmdFire(this.netId,rb.transform.position, rb.transform.forward, rb.transform.rotation);
         }
     }
 
@@ -448,5 +422,15 @@ public class DarkFighterPlayer : NetworkBehaviour
     public string GetNickName()
     {
         return nickname;
+    }
+
+    public int GetHitPoint()
+    {
+        return hitpoint;
+    }
+
+    public void IncScore()
+    {
+        score += 1;
     }
 }
