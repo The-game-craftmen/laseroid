@@ -193,7 +193,6 @@ public class DarkFighterPlayer : NetworkBehaviour
             GameObject explosion = Resources.Load("LoudExplosion") as GameObject;
             GameObject expl = (GameObject)Instantiate(explosion, transform.position, transform.rotation);
             NetworkServer.Spawn(expl);
-            //RpcRespawn();
             transform.position = Vector3.zero;
             hitpoint = hitpointMax;
         }
@@ -215,15 +214,7 @@ public class DarkFighterPlayer : NetworkBehaviour
         Destroy(bullet, 20.0f);
     }
 
-    [ClientRpc]
-    void RpcRespawn()
-    {
-        if (isLocalPlayer)
-        {
-            transform.position = Vector3.zero;
-            hitpoint = hitpointMax;
-        }
-    }
+    
 
    
     static bool ShouldEmissionBeEnabled(Color color)
@@ -323,23 +314,33 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
     }
 
+    [Command]
+    void CmdManageTorque(Vector3 torque)
+    {
+        rb.AddTorque(torque, ForceMode.Acceleration);
+    }
+
     void ManageKeyboardInGame()
     {
         if (Input.GetKey(KeyCode.Z) == true)
         {
-            rb.AddTorque(transform.right * torqueStep * Time.deltaTime, ForceMode.Acceleration);
+            //rb.AddTorque(transform.right * torqueStep * Time.deltaTime, ForceMode.Acceleration);
+            CmdManageTorque(transform.right * torqueStep * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.S) == true)
         {
-            rb.AddTorque(-transform.right * torqueStep * Time.deltaTime, ForceMode.Acceleration);
+            //rb.AddTorque(-transform.right * torqueStep * Time.deltaTime, ForceMode.Acceleration);
+            CmdManageTorque(-transform.right * torqueStep * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.D) == true)
         {
-            rb.AddTorque(transform.up * torqueStep * Time.deltaTime, ForceMode.Acceleration);
+            //rb.AddTorque(transform.up * torqueStep * Time.deltaTime, ForceMode.Acceleration);
+            CmdManageTorque(transform.up * torqueStep * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.Q) == true)
         {
-            rb.AddTorque(-transform.up * torqueStep * Time.deltaTime, ForceMode.Acceleration);
+            //rb.AddTorque(-transform.up * torqueStep * Time.deltaTime, ForceMode.Acceleration);
+            CmdManageTorque(-transform.up * torqueStep * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.A) == true)
         {
