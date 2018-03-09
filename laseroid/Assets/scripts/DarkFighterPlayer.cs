@@ -22,11 +22,26 @@ public class DarkFighterPlayer : NetworkBehaviour
     private GameObject healthBar;
     private GameObject floatingNameText = null;
     protected GameObject targetUi = null;
+    private GameObject PlayerScore = null;
     [SyncVar]
     private int score = 0;
     private float ticksExitMenu ;
     [SyncVar]
     private string nickname;
+
+    public int GetScore()
+    {
+        return score;
+    }
+
+    public GameObject GetPlayerScoreUI()
+    {
+        return PlayerScore;
+    }
+    public void SetPlayerScoreUI(GameObject _pls)
+    {
+        PlayerScore = _pls;
+    }
 
     public GameObject getFloatingNameText()
     {
@@ -101,6 +116,31 @@ public class DarkFighterPlayer : NetworkBehaviour
         return (float)hitpoint / (float)hitpointMax;
     }
 
+    void ShowScore(DarkFighterPlayer _shipScript)
+    {
+        GameObject pls = _shipScript.GetPlayerScoreUI();
+        if (pls == null)
+        {
+            GameObject pst = Resources.Load("ui/PlayerScoreText") as GameObject;
+            GameObject pstInstance = Instantiate(pst) as GameObject;
+            GameObject panel = GameObject.Find("Canvas").transform.Find("PanelListPlayer").gameObject;
+            if (panel)
+            {
+                pstInstance.transform.SetParent(panel.transform);
+                GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
+                pstInstance.GetComponent<RectTransform>().anchoredPosition = new Vector2(-200f, 100f -100f * (listOfShips.Length-1));
+
+            }
+            _shipScript.SetPlayerScoreUI(pstInstance);
+
+        }
+        else
+        {
+            Text plsText = pls.GetComponent<Text>();
+            plsText.text = _shipScript.GetNickName() + " : " + _shipScript.GetScore();
+        }
+    }
+
     void OnGUI()
     {
         if (isLocalPlayer) { 
@@ -112,8 +152,9 @@ public class DarkFighterPlayer : NetworkBehaviour
                 DarkFighterPlayer shipScript = listOfShips[itShip].GetComponent<DarkFighterPlayer>();
                 if (shipScript != null)
                 {
-                    pls += shipScript.nickname;
-                    pls += shipScript.score + " / ";
+                    //pls += shipScript.nickname;
+                    //pls += shipScript.score + " / ";
+                    ShowScore(shipScript);
                     if (shipScript.netId != this.netId) { 
                         if (shipScript.getFloatingNameText() == null)
                         {
@@ -161,12 +202,12 @@ public class DarkFighterPlayer : NetworkBehaviour
 
                 }
             }
-            GameObject listPLayerGui = GameObject.Find("Canvas").transform.Find("listPLayer").gameObject;
+            /*GameObject listPLayerGui = GameObject.Find("Canvas").transform.Find("listPLayer").gameObject;
             if (listPLayerGui)
             {
                 InputField lp = listPLayerGui.GetComponent<InputField>();
                 lp.text = pls;
-            }
+            }*/
         }
     }
 
@@ -324,22 +365,18 @@ public class DarkFighterPlayer : NetworkBehaviour
     {
         if (Input.GetKey(KeyCode.Z) == true)
         {
-            //rb.AddTorque(transform.right * torqueStep * Time.deltaTime, ForceMode.Acceleration);
             CmdManageTorque(transform.right * torqueStep * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.S) == true)
         {
-            //rb.AddTorque(-transform.right * torqueStep * Time.deltaTime, ForceMode.Acceleration);
             CmdManageTorque(-transform.right * torqueStep * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.D) == true)
         {
-            //rb.AddTorque(transform.up * torqueStep * Time.deltaTime, ForceMode.Acceleration);
             CmdManageTorque(transform.up * torqueStep * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.Q) == true)
         {
-            //rb.AddTorque(-transform.up * torqueStep * Time.deltaTime, ForceMode.Acceleration);
             CmdManageTorque(-transform.up * torqueStep * Time.deltaTime);
         }
         else if (Input.GetKey(KeyCode.A) == true)
@@ -365,15 +402,6 @@ public class DarkFighterPlayer : NetworkBehaviour
                     ticksExitMenu = Time.time;
                 }
             }
-            /*GameObject lnm = GameObject.Find("NetworkManager");
-            if (lnm) { 
-                LaserNetworkManager lnmScript = lnm.GetComponent<LaserNetworkManager>();
-                if (lnmScript)
-                {
-                    lnmScript.StopClient();
-                }
-            }
-            Application.Quit();*/
 
         }
         else if (Input.GetKeyDown(KeyCode.Space))

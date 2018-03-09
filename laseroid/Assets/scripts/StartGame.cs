@@ -13,10 +13,17 @@ public class StartGame : MonoBehaviour {
 
     NetworkClient myClient;
 
-  
+    void SetupUI()
+    {
+        RectTransform panel = GameObject.Find("Canvas").transform.Find("PanelListPlayer").gameObject.GetComponent<RectTransform>();
+        panel.anchoredPosition = new Vector2(Screen.width/2- panel.rect.width * panel.localScale.x * 0.7f, Screen.height/2- panel.rect.height * panel.localScale.y * 0.7f);
+        
+    }
+
     // Use thTexts for initialization
      void Start () {
-         dataOverSceneScript = dataOverScene.GetComponent<DataOverScene>();
+        dataOverSceneScript = dataOverScene.GetComponent<DataOverScene>();
+        SetupUI();
      }
 
     public void Retry()
