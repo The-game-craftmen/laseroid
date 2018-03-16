@@ -116,45 +116,16 @@ public class DarkFighterPlayer : NetworkBehaviour
         return (float)hitpoint / (float)hitpointMax;
     }
 
-    void ShowScore(DarkFighterPlayer _shipScript)
-    {
-        GameObject pls = _shipScript.GetPlayerScoreUI();
-        if (pls == null)
-        {
-            GameObject pst = Resources.Load("ui/PlayerScoreText") as GameObject;
-            GameObject pstInstance = Instantiate(pst) as GameObject;
-            GameObject panel = GameObject.Find("Canvas").transform.Find("PanelListPlayer").gameObject;
-            if (panel)
-            {
-                pstInstance.transform.SetParent(panel.transform);
-                GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
-                pstInstance.GetComponent<RectTransform>().anchoredPosition = new Vector2(-200f, 100f -100f * (listOfShips.Length-1));
-
-            }
-            _shipScript.SetPlayerScoreUI(pstInstance);
-
-        }
-        else
-        {
-            Text plsText = pls.GetComponent<Text>();
-            plsText.text = _shipScript.GetNickName() + " : " + _shipScript.GetScore();
-        }
-    }
-
     void OnGUI()
     {
         if (isLocalPlayer) { 
             GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
             GameObject canvas = GameObject.Find("Canvas");
-            string pls = "";
             for (int itShip = 0; itShip < listOfShips.Length; itShip++)
             {
                 DarkFighterPlayer shipScript = listOfShips[itShip].GetComponent<DarkFighterPlayer>();
                 if (shipScript != null)
                 {
-                    //pls += shipScript.nickname;
-                    //pls += shipScript.score + " / ";
-                    ShowScore(shipScript);
                     if (shipScript.netId != this.netId) { 
                         if (shipScript.getFloatingNameText() == null)
                         {
