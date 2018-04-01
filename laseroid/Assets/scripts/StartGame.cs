@@ -11,7 +11,7 @@ public class StartGame : MonoBehaviour {
     public GameObject dataOverScene;
     private DataOverScene dataOverSceneScript;
 
-    NetworkClient myClient;
+    //NetworkClient myClient;
 
     void SetupUI()
     {

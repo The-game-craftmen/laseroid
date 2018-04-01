@@ -11,7 +11,7 @@ public class LaserNetworkManager : NetworkManager
     private GameObject shipPrefab;
     private bool statusConnection = false;//0; // -1 error on connection, 0 not yet connected, 1 connected
     private bool isHost = false;
-    NetworkClient myClient;
+    //NetworkClient myClient;
 
     // Use this for initialization
     void Start()
