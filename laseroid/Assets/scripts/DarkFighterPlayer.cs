@@ -4,6 +4,7 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using UnityEngine;
 
+[NetworkSettings(sendInterval = 0.04f)]
 public class DarkFighterPlayer : NetworkBehaviour
 {
     private float torqueStep = 100;
