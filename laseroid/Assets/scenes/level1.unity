@@ -2109,6 +2109,10 @@ Prefab:
       propertyPath: m_Text
       value: Connection lost with Server
       objectReference: {fileID: 0}
+    - target: {fileID: 11440306, guid: 64c78e622b361ee4bb7d8c081cf77f69, type: 2}
+      propertyPath: m_Interactable
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 64c78e622b361ee4bb7d8c081cf77f69, type: 2}
   m_IsPrefabParent: 0
