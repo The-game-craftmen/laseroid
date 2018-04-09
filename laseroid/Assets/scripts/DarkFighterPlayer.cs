@@ -7,7 +7,7 @@ using UnityEngine;
 [NetworkSettings(sendInterval = 0.04f)]
 public class DarkFighterPlayer : NetworkBehaviour
 {
-    private float torqueStep = 100;
+    private float torqueStep = 50;
     [SyncVar]
     private float speed = 0;
     private const float speedMax = 10;
@@ -24,6 +24,10 @@ public class DarkFighterPlayer : NetworkBehaviour
     private GameObject floatingNameText = null;
     protected GameObject targetUi = null;
     private GameObject PlayerScore = null;
+    private int doubledashRight = 0;
+    private int doubledashLeft = 0;
+    private float strokeLeftTimer = 0.0f;
+    private float strokeRightTimer = 0.0f;
     [SyncVar]
     private int score = 0;
     private float ticksExitMenu ;
@@ -335,6 +339,27 @@ public class DarkFighterPlayer : NetworkBehaviour
 
     void ManageKeyboardInGame()
     {
+        if (Input.GetKeyUp(KeyCode.Q))
+        {
+            if (this.doubledashLeft == 1) { 
+                this.strokeLeftTimer = Time.time;
+            }else
+            {
+                doubledashLeft = 0;
+            }
+
+        }
+        if (Input.GetKeyUp(KeyCode.S))
+        {
+            if (this.doubledashRight == 1)
+            {
+                this.strokeRightTimer = Time.time;
+            }
+            else
+            {
+                doubledashRight = 0;
+            }
+        }
         if (Input.GetKey(KeyCode.Z) == true)
         {
             CmdManageTorque(transform.right * torqueStep * Time.deltaTime);
@@ -345,11 +370,38 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
         else if (Input.GetKey(KeyCode.D) == true)
         {
-            CmdManageTorque(transform.up * torqueStep * Time.deltaTime);
+            if (doubledashRight == 1 && (Time.time - strokeRightTimer) < 0.5f)
+            {
+                doubledashRight = 2;
+            }
+            else if (doubledashRight == 0)
+            {
+                doubledashRight = 1;
+            }
+            if (doubledashRight == 2)
+            {
+                CmdManageTorque(transform.up * torqueStep * Time.deltaTime * 3);
+            }
+            else
+            {
+                CmdManageTorque(transform.up * torqueStep * Time.deltaTime);
+            }
         }
         else if (Input.GetKey(KeyCode.Q) == true)
         {
-            CmdManageTorque(-transform.up * torqueStep * Time.deltaTime);
+            if (doubledashLeft == 1 && (Time.time-strokeLeftTimer ) < 0.5f)
+            {
+                doubledashLeft = 2;
+            }else if(doubledashLeft == 0)
+            {
+                doubledashLeft = 1;
+            }
+            if (doubledashLeft == 2) { 
+                CmdManageTorque(-transform.up * torqueStep * Time.deltaTime * 3);
+            }else
+            {
+                CmdManageTorque(-transform.up * torqueStep * Time.deltaTime);
+            }
         }
         else if (Input.GetKey(KeyCode.A) == true)
         {
@@ -437,3 +489,4 @@ public class DarkFighterPlayer : NetworkBehaviour
         score += 1;
     }
 }
+
