@@ -21,14 +21,14 @@ GameObject:
   - component: {fileID: 4700507291749652}
   - component: {fileID: 33147907041282298}
   - component: {fileID: 23388066550039752}
-  - component: {fileID: 114537396586454030}
-  - component: {fileID: 114527903959782564}
   - component: {fileID: 54252370418428868}
+  - component: {fileID: 114537396586454030}
   - component: {fileID: 114145929962531198}
+  - component: {fileID: 114527903959782564}
   - component: {fileID: 65744636739670602}
   m_Layer: 0
   m_Name: pf_dark_fighter_63
-  m_TagString: ship
+  m_TagString: Ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

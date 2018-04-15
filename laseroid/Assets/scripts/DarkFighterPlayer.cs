@@ -124,7 +124,7 @@ public class DarkFighterPlayer : NetworkBehaviour
     void OnGUI()
     {
         if (isLocalPlayer) { 
-            GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
+            GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("Ship");
             GameObject canvas = GameObject.Find("Canvas");
             for (int itShip = 0; itShip < listOfShips.Length; itShip++)
             {
