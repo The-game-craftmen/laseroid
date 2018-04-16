@@ -37,12 +37,7 @@ public class BulletScript : NetworkBehaviour
     void OnCollisionEnter(Collision _collision)
     {
         if (isServer) {
-<<<<<<< HEAD
-            if(_collision.gameObject.tag == "ship")
-=======
-            Debug.Log("Collision" + collision.gameObject.tag);
-            if(collision.gameObject.tag == "Ship")
->>>>>>> master
+            if(_collision.gameObject.tag == "Ship")
             {
                 DarkFighterPlayer shipControl = _collision.gameObject.GetComponent<DarkFighterPlayer>();                
                 if (shipControl != null)
