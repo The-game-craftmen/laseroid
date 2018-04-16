@@ -5,11 +5,6 @@ using UnityEngine;
 
 public class ShimUi : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-
     void ShowScore()
     {
         GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
@@ -19,7 +14,6 @@ public class ShimUi : MonoBehaviour {
             DarkFighterPlayer shipScript = listOfShips[itShip].GetComponent<DarkFighterPlayer>();
             if (shipScript != null)
             {
-
                 GameObject pls = shipScript.GetPlayerScoreUI();
                 if (pls == null)
                 {
@@ -33,7 +27,6 @@ public class ShimUi : MonoBehaviour {
 
                     }
                     shipScript.SetPlayerScoreUI(pstInstance);
-
                 }
                 else
                 {

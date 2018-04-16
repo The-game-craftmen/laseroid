@@ -17,7 +17,6 @@ public class StartGame : MonoBehaviour {
     {
         RectTransform panel = GameObject.Find("Canvas").transform.Find("PanelListPlayer").gameObject.GetComponent<RectTransform>();
         panel.anchoredPosition = new Vector2(Screen.width/2- panel.rect.width * panel.localScale.x * 0.7f, Screen.height/2- panel.rect.height * panel.localScale.y * 0.7f);
-        
     }
 
     // Use thTexts for initialization
@@ -38,7 +37,7 @@ public class StartGame : MonoBehaviour {
          if (lnm && lnm.GetStatusConnection() )
          {
              GameObject canvasStart = GameObject.Find("CanvasStart");
-            GameObject stateObject = GameObject.Find("GameState");
+             GameObject stateObject = GameObject.Find("GameState");
              if (canvasStart && stateObject)
              {
                 canvasStart.SetActive(false);
@@ -49,7 +48,6 @@ public class StartGame : MonoBehaviour {
                 }
              }
          }
-
      }
 
     void SetNickname()
@@ -67,9 +65,7 @@ public class StartGame : MonoBehaviour {
              {
                  lnm.Join(IP.text);
              }
-
          }
-
      }
 
      public void Host() { 
@@ -81,9 +77,6 @@ public class StartGame : MonoBehaviour {
              {
                 lnm.Host();
              }
-
-
          }
-
      }
 }

@@ -7,19 +7,14 @@ public class ExitMenu : MonoBehaviour {
 
 	public void CancelExit()
     {
-        Debug.Log("Cancel");
         GameObject exitPanel = GameObject.Find("Canvas").transform.Find("PanelExit").gameObject;
-        Debug.Log(exitPanel);
         if (exitPanel)
         {
-            
             exitPanel.SetActive(true);
             GameObject gm = GameObject.Find("GameState");
-            Debug.Log(gm);
             if (gm)
             {
                 GameState gameStateScript = gm.GetComponent<GameState>();
-                Debug.Log(gameStateScript);
                 if (gameStateScript)
                 {
                     gameStateScript.SetState(GameState.C_STATE_EXITMENU);

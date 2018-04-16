@@ -53,9 +53,9 @@ public class DarkFighterPlayer : NetworkBehaviour
         return this.floatingNameText;
     }
 
-    public void setFloatingNameText(GameObject flText)
+    public void setFloatingNameText(GameObject _flText)
     {
-        this.floatingNameText = flText;
+        this.floatingNameText = _flText;
     }
 
     [Command]
@@ -90,20 +90,10 @@ public class DarkFighterPlayer : NetworkBehaviour
                 DataOverScene dos = data.GetComponent<DataOverScene>();
                 if (dos)
                 {
-                    //nickname = dos.GetNickname();
                     CmdSetNickname(dos.GetNickname());
-                    Debug.Log("NICKNAME " + nickname);
                 }
             }
         }
-        
-        //mat.EnableKeyword("_EMISSION");
-        //mat.SetColor("_EmissionColor", Color.green);
-        //mat.SetFloat("_EmissionMap", 10);
-        //mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.
-        //this.GetComponent<MeshRenderer>().material.color = Color.white * 10;
-        ///this.GetComponent<MeshRenderer>().material.SetInt(_EmissionScaleUI)
-
     }
 
     public void SetTargetUi(GameObject _targetUI)
@@ -178,20 +168,14 @@ public class DarkFighterPlayer : NetworkBehaviour
 
                 }
             }
-            /*GameObject listPLayerGui = GameObject.Find("Canvas").transform.Find("listPLayer").gameObject;
-            if (listPLayerGui)
-            {
-                InputField lp = listPLayerGui.GetComponent<InputField>();
-                lp.text = pls;
-            }*/
         }
     }
 
-    private float CalcDistance(GameObject target)
+    private float CalcDistance(GameObject _target)
     {
         float value = 0;
 
-        Vector3 posTarget = target.transform.position;
+        Vector3 posTarget = _target.transform.position;
         float dx = posTarget.x - transform.position.x;
         float dy = posTarget.y - transform.position.y;
         float dz = posTarget.z - transform.position.z;
@@ -204,7 +188,6 @@ public class DarkFighterPlayer : NetworkBehaviour
     public void SetDamage(int _hitpoint)
     {
         hitpoint -= _hitpoint;
-        //if (hitpoint < 0) hitpoint = 0;
         if (hitpoint <= 0)
         {
             GameObject explosion = Resources.Load("LoudExplosion") as GameObject;
@@ -216,39 +199,30 @@ public class DarkFighterPlayer : NetworkBehaviour
     }
 
     [Command]
-    private void CmdFire(NetworkInstanceId _id,Vector3 playerPosition, Vector3 playerForward, Quaternion playerRotation)
+    private void CmdFire(NetworkInstanceId _id,Vector3 _playerPosition, Vector3 _playerForward, Quaternion _playerRotation)
     {
-        Vector3 location = playerPosition + playerForward * 2;
+        Vector3 location = _playerPosition + _playerForward * 2;
         var bullet = (GameObject)Instantiate(bulletPrefab);
         BulletScript bs = bullet.GetComponent<BulletScript>();
         bs.SetShipId(_id);
         NetworkServer.Spawn(bullet);
         Rigidbody rbBullet = bullet.GetComponent<Rigidbody>();
         rbBullet.transform.position = location;
-        rbBullet.transform.rotation = playerRotation;
+        rbBullet.transform.rotation = _playerRotation;
         rbBullet.AddForce(rbBullet.transform.forward * 1500, ForceMode.Acceleration);
 
         Destroy(bullet, 20.0f);
     }
 
-    
-
-   
-    static bool ShouldEmissionBeEnabled(Color color)
+    void UpdateSpeed(float _speedDelta)
     {
-        return color.maxColorComponent > (0.1f / 255.0f);
-    }
-
-
-    void UpdateSpeed(float speedDelta)
-    {
-        if (Mathf.Abs (speed + speedDelta) <= speedMax && (speed + speedDelta)>=0)
+        if (Mathf.Abs (speed + _speedDelta) <= speedMax && (speed + _speedDelta)>=0)
         {
-            speed += speedDelta;
+            speed += _speedDelta;
         }
         else
         {
-            if (Mathf.Abs(speed + speedDelta) > speedMax) {
+            if (Mathf.Abs(speed + _speedDelta) > speedMax) {
                 speed = speedMax;
             }
             else
@@ -256,31 +230,6 @@ public class DarkFighterPlayer : NetworkBehaviour
                 speed = 0;
             }
         }
-
-        /*
-         * Trying to change emissive scale value to glow the engine
-         *
-         
-        Renderer render = this.GetComponent<MeshRenderer>();
-        Material mat = this.GetComponent<MeshRenderer>().material;
-        bool shouldEmissionBeEnabled = ShouldEmissionBeEnabled(render.material.GetColor("_EmissionColor"));
-        if (shouldEmissionBeEnabled)
-        {
-            render.material.EnableKeyword("_EMISSION");
-        }
-        else
-        {
-            render.material.DisableKeyword("_EMISSION");
-        }
-
-
-        //render.material.EnableKeyword("_EMISSION");
-        //DynamicGI.SetEmissive(render, Color.white * 0.1f);
-        //render.UpdateGIMaterials();
-
-        //DynamicGI.UpdateEnvironment();
-        mat.SetColor("_EmissionColor", Color.white * 0.1f);
-        */
     }
 
     [Command]
@@ -332,9 +281,9 @@ public class DarkFighterPlayer : NetworkBehaviour
     }
 
     [Command]
-    void CmdManageTorque(Vector3 torque)
+    void CmdManageTorque(Vector3 _torque)
     {
-        rb.AddTorque(torque, ForceMode.Acceleration);
+        rb.AddTorque(_torque, ForceMode.Acceleration);
     }
 
     void ManageKeyboardInGame()
@@ -458,20 +407,17 @@ public class DarkFighterPlayer : NetworkBehaviour
         }
     }
 
-
     // Update is called once per frame
     void Update () {
         if (isLocalPlayer)
         {
             ManageKeyboard();
-
             UpdateUi();
         }
         if(isServer) { 
             rb.AddForce(rb.transform.forward * speed, ForceMode.Acceleration);
             rb.velocity.Scale(reduceVector);
-        }
-        
+        }   
     }
 
     public string GetNickName()

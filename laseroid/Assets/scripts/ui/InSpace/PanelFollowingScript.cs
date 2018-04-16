@@ -14,26 +14,16 @@ public class PanelFollowingScript : MonoBehaviour {
         distanceText = this.transform.Find("distance").gameObject.GetComponent<Text>();
     }
 
-    public void updateUi(string name, float prcentHull,  float distance)
+    public void updateUi(string _name, float _prcentHull,  float _distance)
     {
         if(nameText == null)
         {
             nameText = this.transform.Find("name").gameObject.GetComponent<Text>();
             hullSlider = this.transform.Find("life").gameObject.GetComponent<Slider>();
             distanceText = this.transform.Find("distance").gameObject.GetComponent<Text>();
-        }
-        
-        nameText.text = name;
-        
-        hullSlider.value = prcentHull;
-
-        distanceText.text = distance.ToString();
-        
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        
-
-	}
+        }   
+        nameText.text = _name;
+        hullSlider.value = _prcentHull;
+        distanceText.text = _distance.ToString();
+    }	
 }

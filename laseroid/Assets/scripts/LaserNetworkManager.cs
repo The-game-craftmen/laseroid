@@ -11,21 +11,12 @@ public class LaserNetworkManager : NetworkManager
     private GameObject shipPrefab;
     private bool statusConnection = false;//0; // -1 error on connection, 0 not yet connected, 1 connected
     private bool isHost = false;
-    //NetworkClient myClient;
-
-    // Use this for initialization
-    void Start()
-    {
-        shipPrefab = Resources.Load("ships/pf_dark_fighter_63") as GameObject;
-    }
 
     public void Host()
     {
         isHost = true;
         netClient = this.StartHost();
     }
-
-
 
     public void Join(string _IP)
     {        
@@ -48,19 +39,15 @@ public class LaserNetworkManager : NetworkManager
     public override void OnStartClient(NetworkClient client)
     {
         base.OnStartClient(client);
-        Debug.Log("OnStartClient ");
-        Debug.Log(client.connection);
         if (client.connection != null)
         {
-            Debug.Log("OnStartClient Connection Not null");
-            statusConnection = true;
-            
+            statusConnection = true;            
         }
     }
 
-    public override void OnClientDisconnect(NetworkConnection conn)
+    public override void OnClientDisconnect(NetworkConnection _conn)
     {
-        base.OnClientDisconnect(conn);
+        base.OnClientDisconnect(_conn);
         GameObject gm = GameObject.Find("GameState");
         if (gm)
         {
@@ -81,48 +68,16 @@ public class LaserNetworkManager : NetworkManager
         }
     }
 
-    public override void OnClientConnect(NetworkConnection conn)
-    {
-        base.OnClientConnect(conn);
-        Debug.Log("OnClientConnect ");
-        Debug.Log(client.connection);
-        if (client.connection != null)
-        {
-            Debug.Log("OnClientConnect Connection Not null");
-            statusConnection = true;
-            GameObject data = GameObject.Find("DataOverScene");
-            Debug.Log(data);
-            if (data)
-            {
-                DataOverScene dataScript = data.GetComponent<DataOverScene>();
-                Debug.Log(dataScript);
-                if (dataScript)
-                {
-                    if (gmi)
-                    {
-                        GameMatchInfo gmScript = gmi.GetComponent<GameMatchInfo>();
-                        Debug.Log(gmScript);
-                        Debug.Log(dataScript.GetNickname());
-                        if (gmScript)
-                        {
-                            gmScript.CmdAddPlayer(client.connection.connectionId, dataScript.GetNickname());
-                        }
-                    }
-                }
-            }
-        }
 
-    }
-
-    public override void OnClientError(NetworkConnection conn, int errorCode)
+    public override void OnClientError(NetworkConnection _conn, int _errorCode)
     {
-        base.OnClientError(conn, errorCode);
+        base.OnClientError(_conn, _errorCode);
         Debug.Log("OnClientError ");
     }
 
-    public override void OnClientNotReady(NetworkConnection conn)
+    public override void OnClientNotReady(NetworkConnection _conn)
     {
-        base.OnClientNotReady(conn);
+        base.OnClientNotReady(_conn);
         Debug.Log("OnClientNotReady ");
     }
 
