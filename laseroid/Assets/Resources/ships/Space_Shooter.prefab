@@ -21,15 +21,15 @@ GameObject:
   - component: {fileID: 4388756739634102}
   - component: {fileID: 33729871893445938}
   - component: {fileID: 23597413287417318}
-  - component: {fileID: 111810571895749722}
+  - component: {fileID: 54042406435670740}
   - component: {fileID: 114674962283677910}
   - component: {fileID: 114194354036343716}
   - component: {fileID: 114524033613939956}
-  - component: {fileID: 54042406435670740}
   - component: {fileID: 65128887735143476}
+  - component: {fileID: 111810571895749722}
   m_Layer: 0
   m_Name: Space_Shooter
-  m_TagString: ship
+  m_TagString: Ship
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

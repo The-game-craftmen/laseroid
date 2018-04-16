@@ -37,14 +37,19 @@ public class BulletScript : NetworkBehaviour
     void OnCollisionEnter(Collision _collision)
     {
         if (isServer) {
+<<<<<<< HEAD
             if(_collision.gameObject.tag == "ship")
+=======
+            Debug.Log("Collision" + collision.gameObject.tag);
+            if(collision.gameObject.tag == "Ship")
+>>>>>>> master
             {
                 DarkFighterPlayer shipControl = _collision.gameObject.GetComponent<DarkFighterPlayer>();                
                 if (shipControl != null)
                 {
                     if ((shipControl.GetHitPoint()- damage) <= 0)
                     {
-                        GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("ship");
+                        GameObject[] listOfShips = GameObject.FindGameObjectsWithTag("Ship");
                         for (int itShip = 0; itShip < listOfShips.Length; itShip++)
                         {
                             DarkFighterPlayer shipScript = listOfShips[itShip].GetComponent<DarkFighterPlayer>();
