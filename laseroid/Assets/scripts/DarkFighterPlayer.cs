@@ -10,7 +10,7 @@ public class DarkFighterPlayer : NetworkBehaviour
     private float torqueStep = 50;
     [SyncVar]
     private float speed = 0;
-    private const float speedMax = 10;
+    private const float speedMax = 200;
     [SyncVar(hook = "OnChangeHitPoints")]
     private int hitpoint = 100;
     private int hitpointMax = 100;
@@ -73,7 +73,7 @@ public class DarkFighterPlayer : NetworkBehaviour
         if (isLocalPlayer) {
             Camera camToPlayer = Camera.main;
             camToPlayer.transform.parent = this.transform;
-            camToPlayer.transform.position = new Vector3(0, 0, 0);
+            camToPlayer.transform.position = new Vector3(0, 0, -30);
 
             speedBar = GameObject.Find("Canvas").transform.Find("SpeedBar").gameObject;
             healthBar = GameObject.Find("Canvas").transform.Find("HealthBar").gameObject;
